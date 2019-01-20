@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Support library for Gamma Four data-centric applications.</Description>
+    <Copyright>Copyright © 2018 - Gamma Four, Inc.  All Rights Reserved.</Copyright>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/GammaFour/GammaFour.Data</RepositoryUrl>
+    <PackageTags>Support Library C# Data</PackageTags>
+    <PackageIconUrl>https://i.imgur.com/TI9hwe0.png</PackageIconUrl>
+    <Configurations>Development;Staging;Production</Configurations>
+  </PropertyGroup>
+
+<PropertyGroup>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Company>Gamma Four, Inc.</Company>
+    <Authors>Donald R. Airey</Authors>
+    <RepositoryType>GIT</RepositoryType>
+</PropertyGroup>
+
+<ItemGroup>
+    <None Include="..\LICENSE" Pack="true" PackagePath="" />
+</ItemGroup>
+
+</Project>
