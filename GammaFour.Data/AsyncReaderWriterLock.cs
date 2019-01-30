@@ -125,12 +125,13 @@ namespace GammaFour.Data
                     if (Transaction.Current != null)
                     {
                         // If we don't already have an action associated with the completion of the current transaction, then make one.
-                        if (!this.transactionCompletionAction.ContainsKey(Transaction.Current))
+                        if (this.transactionCompletionAction.ContainsKey(Transaction.Current))
                         {
-                            Transaction.Current.TransactionCompleted += this.OnTransactionCompleted;
+                            throw new InvalidOperationException("Attempt to enter a lock recursively.");
                         }
 
                         // This associates the transaction with an action to exit the read lock on completion of the transaction.
+                        Transaction.Current.TransactionCompleted += this.OnTransactionCompleted;
                         this.transactionCompletionAction[Transaction.Current] = () => this.ExitReadLock();
                     }
 
@@ -177,12 +178,13 @@ namespace GammaFour.Data
                         if (Transaction.Current != null)
                         {
                             // If we don't already have an action associated with the completion of the current transaction, then make one.
-                            if (!this.transactionCompletionAction.ContainsKey(Transaction.Current))
+                            if (this.transactionCompletionAction.ContainsKey(Transaction.Current))
                             {
-                                Transaction.Current.TransactionCompleted += this.OnTransactionCompleted;
+                                throw new InvalidOperationException("Attempt to enter a lock recursively.");
                             }
 
                             // This associates the transaction with an action to exit the read lock on completion of the transaction.
+                            Transaction.Current.TransactionCompleted += this.OnTransactionCompleted;
                             this.transactionCompletionAction[Transaction.Current] = () => this.ExitReadLock();
                         }
                     }
@@ -438,12 +440,13 @@ namespace GammaFour.Data
                 if (Transaction.Current != null)
                 {
                     // If we don't already have an action associated with the completion of the current transaction, then make one.
-                    if (!this.transactionCompletionAction.ContainsKey(Transaction.Current))
+                    if (this.transactionCompletionAction.ContainsKey(Transaction.Current))
                     {
-                        Transaction.Current.TransactionCompleted += this.OnTransactionCompleted;
+                        throw new InvalidOperationException("Attempt to enter a lock recursively.");
                     }
 
                     // This associates the transaction with an action to exit the read lock on completion of the transaction.
+                    Transaction.Current.TransactionCompleted += this.OnTransactionCompleted;
                     this.transactionCompletionAction[Transaction.Current] = () => this.ExitWriteLock();
                 }
             }
