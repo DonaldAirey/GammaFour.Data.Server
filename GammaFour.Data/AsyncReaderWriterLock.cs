@@ -343,7 +343,16 @@ namespace GammaFour.Data
             // Ensure exclusive access to the housekeeping fields.
             lock (this.syncRoot)
             {
+                // Update the housekeeping to show the read lock isn't held anymore.
                 this.ExitReadLockCore();
+
+                // If this action is part of a transaction, then remove the implicit action to exit the read lock (because we've exited the lock
+                // explicitly).
+                if (Transaction.Current != null)
+                {
+                    this.transactionCompletionAction.Remove(Transaction.Current);
+                    Transaction.Current.TransactionCompleted -= this.OnTransactionCompleted;
+                }
             }
         }
 
@@ -398,14 +407,6 @@ namespace GammaFour.Data
             {
                 this.readLockReleaseSemaphore.Release();
             }
-
-            // If this action is part of a transaction, then remove the implicit action to exit the read lock (because we've exited the lock
-            // explicitly).
-            if (Transaction.Current != null)
-            {
-                this.transactionCompletionAction.Remove(Transaction.Current);
-                Transaction.Current.TransactionCompleted -= this.OnTransactionCompleted;
-            }
         }
 
         /// <summary>
@@ -446,8 +447,8 @@ namespace GammaFour.Data
                     }
 
                     // This associates the transaction with an action to exit the read lock on completion of the transaction.
-                    Transaction.Current.TransactionCompleted += this.OnTransactionCompleted;
                     this.transactionCompletionAction[Transaction.Current] = () => this.ExitWriteLock();
+                    Transaction.Current.TransactionCompleted += this.OnTransactionCompleted;
                 }
             }
             else
