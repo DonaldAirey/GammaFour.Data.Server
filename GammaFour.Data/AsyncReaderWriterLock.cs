@@ -132,7 +132,7 @@ namespace GammaFour.Data
 
                         // This associates the transaction with an action to exit the read lock on completion of the transaction.
                         Transaction.Current.TransactionCompleted += this.OnTransactionCompleted;
-                        this.transactionCompletionAction[Transaction.Current] = () => this.ExitReadLock();
+                        this.transactionCompletionAction[Transaction.Current] = () => { lock (this.syncRoot) { this.ExitReadLockCore(); } };
                     }
 
                     // Indicates the lock was acquired and we don't have to wait.
@@ -185,7 +185,7 @@ namespace GammaFour.Data
 
                             // This associates the transaction with an action to exit the read lock on completion of the transaction.
                             Transaction.Current.TransactionCompleted += this.OnTransactionCompleted;
-                            this.transactionCompletionAction[Transaction.Current] = () => this.ExitReadLock();
+                            this.transactionCompletionAction[Transaction.Current] = () => { lock (this.syncRoot) { this.ExitReadLockCore(); } };
                         }
                     }
                     else
