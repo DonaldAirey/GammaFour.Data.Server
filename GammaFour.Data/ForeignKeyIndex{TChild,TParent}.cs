@@ -215,11 +215,12 @@ namespace GammaFour.Data
             object key = this.keyFunction(value);
             if (key != null)
             {
-                // Make sure the parent key exist in the index before removing the child.
+                // Make sure the parent key exist in the index before removing the child.  If the parent doesn't exist, then there's not much we can
+                // do.
                 HashSet<TChild> hashSet;
                 if (!this.dictionary.TryGetValue(key, out hashSet))
                 {
-                    throw new KeyNotFoundException($"{this.Name}: {key}");
+                    return;
                 }
 
                 // Remove the existing child record from the hash and remove the hash if it's empty.
