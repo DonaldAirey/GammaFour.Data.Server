@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Description>Support library for Gamma Four data-centric applications.</Description>
     <Copyright>Copyright © 2018 - Gamma Four, Inc.  All Rights Reserved.</Copyright>
     <PackageProjectUrl></PackageProjectUrl>
@@ -19,7 +19,34 @@
     <RepositoryType>GIT</RepositoryType>
     <AssemblyVersion>1.6.0.0</AssemblyVersion>
     <FileVersion>1.6.0.0</FileVersion>
-    <Version>1.6.0</Version>
+    <Version>1.7.0</Version>
+</PropertyGroup>
+
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|AnyCPU'">
+  <NoWarn />
+  <DefineConstants />
+  <Optimize>true</Optimize>
+  <WarningsAsErrors />
+  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  <DocumentationFile>C:\Source\GammaFour.Data\GammaFour.Data\bin\Production\netstandard2.0\GammaFour.Data.xml</DocumentationFile>
+</PropertyGroup>
+
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Staging|AnyCPU'">
+  <DefineConstants />
+  <Optimize>true</Optimize>
+  <NoWarn />
+  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  <WarningsAsErrors />
+  <DocumentationFile>C:\Source\GammaFour.Data\GammaFour.Data\bin\Staging\netstandard2.0\GammaFour.Data.xml</DocumentationFile>
+</PropertyGroup>
+
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|AnyCPU'">
+  <DocumentationFile>C:\Source\GammaFour.Data\GammaFour.Data\bin\Development\netstandard2.0\GammaFour.Data.xml</DocumentationFile>
+  <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  <WarningsAsErrors />
+  <Optimize>false</Optimize>
+  <DefineConstants>DEBUG;TRACE</DefineConstants>
+  <NoWarn />
 </PropertyGroup>
 
 <ItemGroup>
