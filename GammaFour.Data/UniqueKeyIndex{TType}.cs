@@ -22,6 +22,11 @@ namespace GammaFour.Data
         private Dictionary<object, TType> dictionary;
 
         /// <summary>
+        /// Used to filter items that appear in the index.
+        /// </summary>
+        private Func<TType, bool> filterFunction = t => true;
+
+        /// <summary>
         /// Used to get the primary key from the record.
         /// </summary>
         private Func<TType, object> keyFunction;
@@ -112,6 +117,17 @@ namespace GammaFour.Data
             return this;
         }
 
+        /// <summary>
+        /// Specifies the key for organizing the collection.
+        /// </summary>
+        /// <param name="filter">Used to filter items that appear in the index.</param>
+        /// <returns>A reference to this object for Fluent construction.</returns>
+        public UniqueKeyIndex<TType> HasFilter(Expression<Func<TType, bool>> filter)
+        {
+            this.filterFunction = filter.Compile();
+            return this;
+        }
+
         /// <inheritdoc/>
         public void InDoubt(Enlistment enlistment)
         {
@@ -152,10 +168,13 @@ namespace GammaFour.Data
         public void Add(TType value)
         {
             // Extract the key from the value and add it to the dictionary making sure we can undo the action.
-            object key = this.keyFunction(value);
-            this.dictionary.Add(key, value);
-            this.undoStack.Push(() => this.dictionary.Remove(key));
-            this.OnIndexChanging(DataAction.Add, null, key);
+            if (this.filterFunction(value))
+            {
+                object key = this.keyFunction(value);
+                this.dictionary.Add(key, value);
+                this.undoStack.Push(() => this.dictionary.Remove(key));
+                this.OnIndexChanging(DataAction.Add, null, key);
+            }
         }
 
         /// <summary>
@@ -181,23 +200,34 @@ namespace GammaFour.Data
         public void Update(TType value)
         {
             // There's nothing to update if the key hasn't changed.
-            object oldKey = this.keyFunction(value.GetVersion(RecordVersion.Previous));
+            TType oldValue = value.GetVersion(RecordVersion.Previous);
+            object oldKey = this.keyFunction(oldValue);
             object newKey = this.keyFunction(value);
-            if (oldKey == null || oldKey.Equals(newKey))
+
+            // Nothing to do if the keys are the same.
+            if (oldKey != null && oldKey.Equals(newKey))
             {
                 return;
             }
 
             // Make sure the key was properly removed before we push an undo operation on the stack.  Removing an item that isn't part of the index
             // is not considered an exception.
-            if (this.dictionary.Remove(oldKey))
+            if (this.filterFunction(oldValue))
             {
-                this.undoStack.Push(() => this.dictionary.Add(oldKey, value));
+                if (this.dictionary.Remove(oldKey))
+                {
+                    this.undoStack.Push(() => this.dictionary.Add(oldKey, value));
+                }
             }
 
             // Extract the new key from the value and add it to the dictionary making sure we can undo the action.
-            this.dictionary.Add(newKey, value);
-            this.undoStack.Push(() => this.dictionary.Remove(newKey));
+            if (this.filterFunction(value))
+            {
+                this.dictionary.Add(newKey, value);
+                this.undoStack.Push(() => this.dictionary.Remove(newKey));
+            }
+
+            // Notify when the index has changed.
             this.OnIndexChanging(DataAction.Update, oldKey, newKey);
         }
 
