@@ -9,7 +9,7 @@
     <RepositoryUrl>https://github.com/GammaFour/GammaFour.Data</RepositoryUrl>
     <PackageTags>Support Library C# Data</PackageTags>
     <PackageIconUrl>https://i.imgur.com/TI9hwe0.png</PackageIconUrl>
-    <Configurations>Development;Staging;Production</Configurations>
+    <Configurations>Development;Production</Configurations>
   </PropertyGroup>
 
 <PropertyGroup>
@@ -29,15 +29,6 @@
   <WarningsAsErrors />
   <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   <DocumentationFile>C:\Source\GammaFour.Data\GammaFour.Data\bin\Production\netstandard2.0\GammaFour.Data.xml</DocumentationFile>
-</PropertyGroup>
-
-<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Staging|AnyCPU'">
-  <DefineConstants />
-  <Optimize>true</Optimize>
-  <NoWarn />
-  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  <WarningsAsErrors />
-  <DocumentationFile>C:\Source\GammaFour.Data\GammaFour.Data\bin\Staging\netstandard2.0\GammaFour.Data.xml</DocumentationFile>
 </PropertyGroup>
 
 <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|AnyCPU'">
