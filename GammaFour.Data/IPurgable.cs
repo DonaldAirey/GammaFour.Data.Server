@@ -9,13 +9,13 @@ namespace GammaFour.Data
     /// <summary>
     /// Used by a template selector to connect a view model to the template used to display it.
     /// </summary>
-    public interface IMergable
+    public interface IPurgable
     {
         /// <summary>
-        /// A method to merge a record into a set.
+        /// A method to purge a record from a set.
         /// </summary>
         /// <param name="source">A set of records.</param>
-        /// <returns>The records that couldn't be merged.</returns>
-        IEnumerable<object> Merge(IEnumerable<object> source);
+        /// <returns>The records that couldn't be purged.</returns>
+        IEnumerable<object> Purge(IEnumerable<object> source);
     }
 }

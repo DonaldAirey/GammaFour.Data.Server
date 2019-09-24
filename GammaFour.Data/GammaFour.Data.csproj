@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Description>Support library for Gamma Four data-centric applications.</Description>
-    <Copyright>Copyright © 2018 - Gamma Four, Inc.  All Rights Reserved.</Copyright>
+    <Copyright>Copyright © 2019 - Gamma Four, Inc.  All Rights Reserved.</Copyright>
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/GammaFour/GammaFour.Data</RepositoryUrl>
     <PackageTags>Support Library C# Data</PackageTags>
@@ -17,9 +17,9 @@
     <Company>Gamma Four, Inc.</Company>
     <Authors>Donald R. Airey</Authors>
     <RepositoryType>GIT</RepositoryType>
-    <AssemblyVersion>1.9.0.0</AssemblyVersion>
-    <FileVersion>1.9.0.0</FileVersion>
-    <Version>1.9.0</Version>
+    <AssemblyVersion>1.12.0.0</AssemblyVersion>
+    <FileVersion>1.12.0.0</FileVersion>
+    <Version>1.12.0</Version>
 </PropertyGroup>
 
 <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|AnyCPU'">

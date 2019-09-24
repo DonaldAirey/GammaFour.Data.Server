@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Configurations>Development;Staging;Production</Configurations>
+    <Configurations>Development;Production</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|AnyCPU'">
@@ -17,11 +17,6 @@
     <Optimize>true</Optimize>
     <DocumentationFile>C:\Source\GammaFour.Data\GammaFour.Data.Tests\bin\Production\netcoreapp2.2\GammaFour.Data.Tests.xml</DocumentationFile>
     <NoWarn>1701;1702;SA1600;CS1591</NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Staging|AnyCPU'">
-    <Optimize>true</Optimize>
-    <DefineConstants />
   </PropertyGroup>
 
   <ItemGroup>

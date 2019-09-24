@@ -1,4 +1,4 @@
-﻿// <copyright file="ForeignKeyIndex{TChild,TParent}.cs" company="Gamma Four, Inc.">
+﻿// <copyright file="SimpleForeignKeyIndex{TChild,TParent}.cs" company="Gamma Four, Inc.">
 //    Copyright © 2018 - Gamma Four, Inc.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
@@ -10,11 +10,11 @@ namespace GammaFour.Data
     using System.Transactions;
 
     /// <summary>
-    /// An index.
+    /// An foreign key index without the transaction logic.
     /// </summary>
     /// <typeparam name="TChild">The child value.</typeparam>
     /// <typeparam name="TParent">The parent value.</typeparam>
-    public class ForeignKeyIndex<TChild, TParent> : IEnlistmentNotification
+    public class SimpleForeignKeyIndex<TChild, TParent>
         where TParent : IVersionable<TParent>
         where TChild : IVersionable<TChild>
     {
@@ -31,19 +31,14 @@ namespace GammaFour.Data
         /// <summary>
         /// The parent index.
         /// </summary>
-        private UniqueKeyIndex<TParent> parentIndex;
+        private SimpleUniqueKeyIndex<TParent> parentIndex;
 
         /// <summary>
-        /// The actions for undoing a transaction.
-        /// </summary>
-        private Stack<Action> undoStack = new Stack<Action>();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ForeignKeyIndex{TChild, TParent}"/> class.
+        /// Initializes a new instance of the <see cref="SimpleForeignKeyIndex{TChild, TParent}"/> class.
         /// </summary>
         /// <param name="name">The name of the index.</param>
         /// <param name="parentIndex">The parent index.</param>
-        public ForeignKeyIndex(string name, UniqueKeyIndex<TParent> parentIndex)
+        public SimpleForeignKeyIndex(string name, SimpleUniqueKeyIndex<TParent> parentIndex)
         {
             // Initialize the object.
             this.Name = name;
@@ -94,28 +89,7 @@ namespace GammaFour.Data
                     throw new DuplicateKeyException($"{this.Name}: {key}");
                 }
 
-                // This allows us to back out of the operation.
-                this.undoStack.Push(() =>
-                {
-                    // Remove the new child from the index.  Note that we know it's there, so we don't need to 'try' and find it.
-                    HashSet<TChild> undoHashSet = this.dictionary[key];
-                    undoHashSet.Remove(value);
-                    if (undoHashSet.Count == 0)
-                    {
-                        this.dictionary.Remove(key);
-                    }
-                });
             }
-        }
-
-        /// <inheritdoc/>
-        public void Commit(Enlistment enlistment)
-        {
-            // We don't need this after committing the transaction.
-            this.undoStack.Clear();
-
-            // The transaction is complete as far as this index is concerned.
-            enlistment.Done();
         }
 
         /// <summary>
@@ -154,14 +128,14 @@ namespace GammaFour.Data
         /// </summary>
         /// <param name="key">Used to extract the key from the record.</param>
         /// <returns>A reference to this object for Fluent construction.</returns>
-        public ForeignKeyIndex<TChild, TParent> HasIndex(Expression<Func<TChild, object>> key)
+        public SimpleForeignKeyIndex<TChild, TParent> HasIndex(Expression<Func<TChild, object>> key)
         {
             this.keyFunction = key.Compile();
             return this;
         }
 
         /// <summary>
-        /// Gets an indication of whether the child record has a parent.
+        /// Gets the parent recordd of the given child.
         /// </summary>
         /// <param name="child">The child record.</param>
         /// <returns>The parent record of the given child.</returns>
@@ -176,33 +150,6 @@ namespace GammaFour.Data
         public void InDoubt(Enlistment enlistment)
         {
             throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public void Prepare(PreparingEnlistment preparingEnlistment)
-        {
-            // If we haven't made any changes to the index, then just release any read locks.  Otherwise, signal that the transaction can proceed to
-            // the second phase.  Note that we assume there aren't any write locks if there haven't been any changes.
-            if (this.undoStack.Count == 0)
-            {
-                // We don't need to commit or roll back read-only actions.
-                preparingEnlistment.Done();
-            }
-            else
-            {
-                // Ready to commit or rollback.
-                preparingEnlistment.Prepared();
-            }
-        }
-
-        /// <inheritdoc/>
-        public void Rollback(Enlistment enlistment)
-        {
-            // Undo every action in the reverse order that it was enlisted.
-            while (this.undoStack.Count != 0)
-            {
-                this.undoStack.Pop()();
-            }
         }
 
         /// <summary>
@@ -229,21 +176,6 @@ namespace GammaFour.Data
                 {
                     this.dictionary.Remove(key);
                 }
-
-                // This allows us to back out of the operation.
-                this.undoStack.Push(() =>
-                {
-                    // Make sure there's a bucket for the restored record.
-                    HashSet<TChild> undoHashSet;
-                    if (!this.dictionary.TryGetValue(key, out undoHashSet))
-                    {
-                        undoHashSet = new HashSet<TChild>();
-                        this.dictionary.Add(key, undoHashSet);
-                    }
-
-                    // This will place the restored record back in the hashtable.
-                    undoHashSet.Add(value);
-                });
             }
         }
 
@@ -277,21 +209,6 @@ namespace GammaFour.Data
                 {
                     this.dictionary.Remove(oldKey);
                 }
-
-                // This allows us to back out of the operation.
-                this.undoStack.Push(() =>
-                {
-                    // Make sure there's a bucket for the restored record.
-                    HashSet<TChild> undoHashSet;
-                    if (!this.dictionary.TryGetValue(oldKey, out undoHashSet))
-                    {
-                        undoHashSet = new HashSet<TChild>();
-                        this.dictionary.Add(oldKey, undoHashSet);
-                    }
-
-                    // This will place the restored record back in the hashtable.
-                    undoHashSet.Add(value);
-                });
             }
 
             // Don't attempt to add a record with a null key.
@@ -317,18 +234,6 @@ namespace GammaFour.Data
                 {
                     throw new DuplicateKeyException($"{this.Name}: {newKey}");
                 }
-
-                // This allows us to back out of the operation.
-                this.undoStack.Push(() =>
-                {
-                    // Remove the new child from the index.  Note that we know it's there, so we don't need to 'try' and find it.
-                    HashSet<TChild> undoHashSet = this.dictionary[newKey];
-                    undoHashSet.Remove(value);
-                    if (undoHashSet.Count == 0)
-                    {
-                        this.dictionary.Remove(newKey);
-                    }
-                });
             }
         }
 

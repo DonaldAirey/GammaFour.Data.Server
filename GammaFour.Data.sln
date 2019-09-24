@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.168
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GammaFour.Data", "GammaFour.Data\GammaFour.Data.csproj", "{3B16239A-4F0E-4A4F-8914-B83597CD4BAE}"
 EndProject
@@ -11,21 +11,16 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Development|Any CPU = Development|Any CPU
 		Production|Any CPU = Production|Any CPU
-		Staging|Any CPU = Staging|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{3B16239A-4F0E-4A4F-8914-B83597CD4BAE}.Development|Any CPU.ActiveCfg = Development|Any CPU
 		{3B16239A-4F0E-4A4F-8914-B83597CD4BAE}.Development|Any CPU.Build.0 = Development|Any CPU
 		{3B16239A-4F0E-4A4F-8914-B83597CD4BAE}.Production|Any CPU.ActiveCfg = Production|Any CPU
 		{3B16239A-4F0E-4A4F-8914-B83597CD4BAE}.Production|Any CPU.Build.0 = Production|Any CPU
-		{3B16239A-4F0E-4A4F-8914-B83597CD4BAE}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{3B16239A-4F0E-4A4F-8914-B83597CD4BAE}.Staging|Any CPU.Build.0 = Staging|Any CPU
 		{77338381-AEFE-497F-834B-540DC787D390}.Development|Any CPU.ActiveCfg = Development|Any CPU
 		{77338381-AEFE-497F-834B-540DC787D390}.Development|Any CPU.Build.0 = Development|Any CPU
 		{77338381-AEFE-497F-834B-540DC787D390}.Production|Any CPU.ActiveCfg = Production|Any CPU
 		{77338381-AEFE-497F-834B-540DC787D390}.Production|Any CPU.Build.0 = Production|Any CPU
-		{77338381-AEFE-497F-834B-540DC787D390}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{77338381-AEFE-497F-834B-540DC787D390}.Staging|Any CPU.Build.0 = Staging|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
