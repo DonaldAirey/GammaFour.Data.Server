@@ -185,11 +185,14 @@ namespace GammaFour.Data
         {
             // Make sure the key was properly removed before we push an undo operation on the stack.  Removing an item that isn't part of the index
             // is not considered an exception.
-            object key = this.keyFunction(value);
-            if (this.dictionary.Remove(key))
+            if (this.filterFunction(value))
             {
-                this.undoStack.Push(() => this.dictionary.Add(key, value));
-                this.OnIndexChanging(DataAction.Delete, key, null);
+                object key = this.keyFunction(value);
+                if (this.dictionary.Remove(key))
+                {
+                    this.undoStack.Push(() => this.dictionary.Add(key, value));
+                    this.OnIndexChanging(DataAction.Delete, key, null);
+                }
             }
         }
 
