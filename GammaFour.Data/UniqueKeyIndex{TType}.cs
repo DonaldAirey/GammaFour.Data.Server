@@ -1,5 +1,5 @@
-﻿// <copyright file="UniqueKeyIndex{TType}.cs" company="Gamma Four, Inc.">
-//    Copyright © 2018 - Gamma Four, Inc.  All Rights Reserved.
+﻿// <copyright file="UniqueKeyIndex{TType}.cs" company="Donald Roy Airey">
+//    Copyright © 2020 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data
@@ -8,6 +8,7 @@ namespace GammaFour.Data
     using System.Collections.Generic;
     using System.Linq.Expressions;
     using System.Transactions;
+    using Microsoft.VisualStudio.Threading;
 
     /// <summary>
     /// A unique index.
@@ -65,6 +66,12 @@ namespace GammaFour.Data
         /// <inheritdoc/>
         public void Commit(Enlistment enlistment)
         {
+            // Validate the argument.
+            if (enlistment == null)
+            {
+                throw new ArgumentNullException(nameof(enlistment));
+            }
+
             // We don't need this after committing the transaction.
             this.undoStack.Clear();
 
@@ -113,6 +120,12 @@ namespace GammaFour.Data
         /// <returns>A reference to this object for Fluent construction.</returns>
         public UniqueKeyIndex<TType> HasIndex(Expression<Func<TType, object>> key)
         {
+            // Validate the argument.
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             this.keyFunction = key.Compile();
             return this;
         }
@@ -124,6 +137,12 @@ namespace GammaFour.Data
         /// <returns>A reference to this object for Fluent construction.</returns>
         public UniqueKeyIndex<TType> HasFilter(Expression<Func<TType, bool>> filter)
         {
+            // Validate the argument.
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
             this.filterFunction = filter.Compile();
             return this;
         }
@@ -137,6 +156,12 @@ namespace GammaFour.Data
         /// <inheritdoc/>
         public void Prepare(PreparingEnlistment preparingEnlistment)
         {
+            // Validate the argument.
+            if (preparingEnlistment == null)
+            {
+                throw new ArgumentNullException(nameof(preparingEnlistment));
+            }
+
             // If we haven't made any changes to the index, then just release any read locks.  Otherwise, signal that the transaction can proceed to
             // the second phase.  Note that we assume there aren't any write locks if there haven't been any changes.
             if (this.undoStack.Count == 0)

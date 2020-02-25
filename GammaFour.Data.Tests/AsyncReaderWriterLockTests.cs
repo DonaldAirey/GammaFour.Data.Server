@@ -1,5 +1,5 @@
-﻿// <copyright file="AsyncReaderWriterLockTests.cs" company="Gamma Four, Inc.">
-//    Copyright © 2018 - Gamma Four, Inc.  All Rights Reserved.
+﻿// <copyright file="AsyncReaderWriterLockTests.cs" company="Donald Roy Airey.">
+//    Copyright © 2020 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data.UnitTest
@@ -272,7 +272,7 @@ namespace GammaFour.Data.UnitTest
 
             bool incorrectLockCount = false;
 
-            void checkLockCount()
+            void CheckLockCount()
             {
                 Debug.WriteLine($"ReadLocks = {readLockCount}, WriteLocks = {writeLockCount}");
 
@@ -367,7 +367,7 @@ namespace GammaFour.Data.UnitTest
                                 writeLockCount++;
                             }
 
-                            checkLockCount();
+                            CheckLockCount();
                         }
 
                         // Simulate work.
@@ -386,7 +386,7 @@ namespace GammaFour.Data.UnitTest
                                 writeLockCount--;
                             }
 
-                            checkLockCount();
+                            CheckLockCount();
                         }
                     }
                 });

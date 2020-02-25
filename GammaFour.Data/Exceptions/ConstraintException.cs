@@ -1,5 +1,5 @@
-// <copyright file="ConstraintException.cs" company="Gamma Four, Inc.">
-//    Copyright © 2018 - Gamma Four, Inc.  All Rights Reserved.
+// <copyright file="ConstraintException.cs" company="Donald Roy Airey">
+//    Copyright © 2020 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data

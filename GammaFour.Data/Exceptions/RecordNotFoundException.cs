@@ -1,5 +1,5 @@
-// <copyright file="RecordNotFoundException.cs" company="Gamma Four, Inc.">
-//    Copyright © 2018 - Gamma Four, Inc.  All Rights Reserved.
+// <copyright file="RecordNotFoundException.cs" company="Donald Roy Airey">
+//    Copyright © 2020 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data
@@ -34,7 +34,7 @@ namespace GammaFour.Data
         /// <param name="table">The table where the exception occurred.</param>
         /// <param name="key">The key that caused the exception.</param>
         public RecordNotFoundException(string table, object[] key)
-            : base("Record not found.")
+            : base(Resource.RecordNotFoundError)
         {
             // Initialize the object.
             this.Table = table;

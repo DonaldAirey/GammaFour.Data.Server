@@ -1,5 +1,5 @@
-﻿// <copyright file="ForeignKeyIndex{TChild,TParent}.cs" company="Gamma Four, Inc.">
-//    Copyright © 2018 - Gamma Four, Inc.  All Rights Reserved.
+﻿// <copyright file="ForeignKeyIndex{TChild,TParent}.cs" company="Donald Roy Airey">
+//    Copyright © 2020 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data
@@ -8,6 +8,7 @@ namespace GammaFour.Data
     using System.Collections.Generic;
     using System.Linq.Expressions;
     using System.Transactions;
+    using Microsoft.VisualStudio.Threading;
 
     /// <summary>
     /// An index.
@@ -49,6 +50,12 @@ namespace GammaFour.Data
             this.Name = name;
             this.parentIndex = parentIndex;
             this.dictionary = new Dictionary<object, HashSet<TChild>>();
+
+            // Validate the argument.
+            if (parentIndex == null)
+            {
+                throw new ArgumentNullException(nameof(parentIndex));
+            }
 
             // This instructs the parent key to inform this object about any changes.
             this.parentIndex.IndexChangedHandler += this.HandleUniqueIndexChange;
@@ -111,6 +118,12 @@ namespace GammaFour.Data
         /// <inheritdoc/>
         public void Commit(Enlistment enlistment)
         {
+            // Validate the argument.
+            if (enlistment == null)
+            {
+                throw new ArgumentNullException(nameof(enlistment));
+            }
+
             // We don't need this after committing the transaction.
             this.undoStack.Clear();
 
@@ -156,6 +169,12 @@ namespace GammaFour.Data
         /// <returns>A reference to this object for Fluent construction.</returns>
         public ForeignKeyIndex<TChild, TParent> HasIndex(Expression<Func<TChild, object>> key)
         {
+            // Validate the argument.
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             this.keyFunction = key.Compile();
             return this;
         }
@@ -175,12 +194,24 @@ namespace GammaFour.Data
         /// <inheritdoc/>
         public void InDoubt(Enlistment enlistment)
         {
+            // Validate the argument.
+            if (enlistment == null)
+            {
+                throw new ArgumentNullException(nameof(enlistment));
+            }
+
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
         public void Prepare(PreparingEnlistment preparingEnlistment)
         {
+            // Validate the argument.
+            if (preparingEnlistment == null)
+            {
+                throw new ArgumentNullException(nameof(preparingEnlistment));
+            }
+
             // If we haven't made any changes to the index, then just release any read locks.  Otherwise, signal that the transaction can proceed to
             // the second phase.  Note that we assume there aren't any write locks if there haven't been any changes.
             if (this.undoStack.Count == 0)

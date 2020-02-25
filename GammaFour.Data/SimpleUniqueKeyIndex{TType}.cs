@@ -1,5 +1,5 @@
-﻿// <copyright file="SimpleUniqueKeyIndex{TType}.cs" company="Gamma Four, Inc.">
-//    Copyright © 2018 - Gamma Four, Inc.  All Rights Reserved.
+﻿// <copyright file="SimpleUniqueKeyIndex{TType}.cs" company="Donald Roy Airey">
+//    Copyright © 2020 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data
@@ -7,6 +7,7 @@ namespace GammaFour.Data
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using Microsoft.VisualStudio.Threading;
 
     /// <summary>
     /// A unique index without the transaction logic.
@@ -97,6 +98,12 @@ namespace GammaFour.Data
         /// <returns>A reference to this object for Fluent construction.</returns>
         public SimpleUniqueKeyIndex<TType> HasIndex(Expression<Func<TType, object>> key)
         {
+            // Validate the argument.
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             this.keyFunction = key.Compile();
             return this;
         }
@@ -108,6 +115,12 @@ namespace GammaFour.Data
         /// <returns>A reference to this object for Fluent construction.</returns>
         public SimpleUniqueKeyIndex<TType> HasFilter(Expression<Func<TType, bool>> filter)
         {
+            // Validate the argument.
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
             this.filterFunction = filter.Compile();
             return this;
         }

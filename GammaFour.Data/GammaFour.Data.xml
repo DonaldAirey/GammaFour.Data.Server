@@ -1,0 +1,771 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GammaFour.Data</name>
+    </assembly>
+    <members>
+        <member name="T:GammaFour.Data.DataAction">
+            <summary>
+            An action on a data model.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.DataAction.Add">
+            <summary>
+            Add an item.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.DataAction.Delete">
+            <summary>
+            Delete an item.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.DataAction.Rollback">
+            <summary>
+            Rollback an item.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.DataAction.Update">
+            <summary>
+            Update an item.
+            </summary>
+        </member>
+        <member name="T:GammaFour.Data.DbProvider">
+            <summary>
+            Codes for account types.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.DbProvider.SqlServer">
+            <summary>
+            Microsoft SQL Server
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.DbProvider.PostgreSql">
+            <summary>
+            Amazon PostreSQL
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.DbProvider.MySql">
+            <summary>
+            MySql
+            </summary>
+        </member>
+        <member name="T:GammaFour.Data.DisposableList">
+            <summary>
+            A collection of objects that will be disposed.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.DisposableList.list">
+            <summary>
+            This is the list of items that will be disposed when this object is disposed.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.DisposableList.Add(System.IDisposable)">
+            <summary>
+            Add a disposable element to the list.
+            </summary>
+            <param name="disposable">The disposable object.</param>
+        </member>
+        <member name="M:GammaFour.Data.DisposableList.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:GammaFour.Data.EnlistmentNotificationExtensions">
+            <summary>
+            Extensions to help with enlisting in a transaction.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.EnlistmentNotificationExtensions.Enlist(System.Transactions.IEnlistmentNotification)">
+            <summary>
+            Enlists a <see cref="T:System.Transactions.IEnlistmentNotification"/> object in the current transaction.
+            </summary>
+            <param name="enlistmentNotification">The object to be enlisted in the current transaction.</param>
+        </member>
+        <member name="T:GammaFour.Data.ConstraintException">
+            <summary>
+            Represents errors that occur when locking records for a transaction.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.ConstraintException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.ConstraintException"/> class.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.ConstraintException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.ConstraintException"/> class.
+            </summary>
+            <param name="operation">the operation where the constraint violation occurred.</param>
+        </member>
+        <member name="M:GammaFour.Data.ConstraintException.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.ConstraintException"/> class.
+            </summary>
+            <param name="operation">the operation where the constraint violation occurred.</param>
+            <param name="constraint">The constraint that was violated.</param>
+        </member>
+        <member name="M:GammaFour.Data.ConstraintException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.ConstraintException"/> class.
+            </summary>
+            <param name="message">The message that gives more information about the Win32 error.</param>
+            <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner
+            exception is specified.</param>
+        </member>
+        <member name="P:GammaFour.Data.ConstraintException.Constraint">
+            <summary>
+            Gets the constraint that was violated.
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.ConstraintException.Operation">
+            <summary>
+            Gets the operation where the constraint violation occurred.
+            </summary>
+        </member>
+        <member name="T:GammaFour.Data.DuplicateKeyException">
+            <summary>
+            Represents errors that occur when a duplicate key is added to a unique index.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.DuplicateKeyException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.DuplicateKeyException"/> class.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.DuplicateKeyException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.DuplicateKeyException"/> class.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+        <member name="M:GammaFour.Data.DuplicateKeyException.#ctor(System.String,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.DuplicateKeyException"/> class.
+            </summary>
+            <param name="index">The unique key index where the exception occurred.</param>
+            <param name="key">The key that caused the exception.</param>
+        </member>
+        <member name="M:GammaFour.Data.DuplicateKeyException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.DuplicateKeyException"/> class.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+            <param name="innerException">
+            The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is
+            specified.
+            </param>
+        </member>
+        <member name="P:GammaFour.Data.DuplicateKeyException.Index">
+            <summary>
+            Gets the index where the exception occurred.
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.DuplicateKeyException.Key">
+            <summary>
+            Gets the key that caused the exception.
+            </summary>
+        </member>
+        <member name="T:GammaFour.Data.RecordNotFoundException">
+            <summary>
+            Represents errors that occur calling the unmanaged Win32 libraries.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.RecordNotFoundException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.RecordNotFoundException"/> class.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.RecordNotFoundException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.RecordNotFoundException"/> class.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+        <member name="M:GammaFour.Data.RecordNotFoundException.#ctor(System.String,System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.RecordNotFoundException"/> class.
+            </summary>
+            <param name="table">The table where the exception occurred.</param>
+            <param name="key">The key that caused the exception.</param>
+        </member>
+        <member name="M:GammaFour.Data.RecordNotFoundException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.RecordNotFoundException"/> class.
+            </summary>
+            <param name="message">The message that gives more information about the Win32 error.</param>
+            <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner
+            exception is specified.</param>
+        </member>
+        <member name="P:GammaFour.Data.RecordNotFoundException.Table">
+            <summary>
+            Gets the table where the exception occurred.
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.RecordNotFoundException.Key">
+            <summary>
+            Gets the key that caused the exception.
+            </summary>
+        </member>
+        <member name="T:GammaFour.Data.ForeignKeyIndex`2">
+            <summary>
+            An index.
+            </summary>
+            <typeparam name="TChild">The child value.</typeparam>
+            <typeparam name="TParent">The parent value.</typeparam>
+        </member>
+        <member name="F:GammaFour.Data.ForeignKeyIndex`2.dictionary">
+            <summary>
+            The dictionary containing the index.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.ForeignKeyIndex`2.keyFunction">
+            <summary>
+            Used to get the primary key from the record.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.ForeignKeyIndex`2.parentIndex">
+            <summary>
+            The parent index.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.ForeignKeyIndex`2.undoStack">
+            <summary>
+            The actions for undoing a transaction.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.#ctor(System.String,GammaFour.Data.UniqueKeyIndex{`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.ForeignKeyIndex`2"/> class.
+            </summary>
+            <param name="name">The name of the index.</param>
+            <param name="parentIndex">The parent index.</param>
+        </member>
+        <member name="P:GammaFour.Data.ForeignKeyIndex`2.Lock">
+            <summary>
+            Gets a lock used to synchronize multithreaded access.
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.ForeignKeyIndex`2.Name">
+            <summary>
+            Gets the name of the index.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.Add(`0)">
+            <summary>
+            Adds a key to the index.
+            </summary>
+            <param name="value">The referenced record.</param>
+        </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.Commit(System.Transactions.Enlistment)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.GetChildren(`1)">
+            <summary>
+            Finds the value indexed by the given key.
+            </summary>
+            <param name="parent">The parent record.</param>
+            <returns>The record indexed by the given key, or null if it doesn't exist.</returns>
+        </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.GetParent(`0)">
+            <summary>
+            Gets the parent recordd of the given child.
+            </summary>
+            <param name="child">The child record.</param>
+            <returns>The parent record of the given child.</returns>
+        </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.HasIndex(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Specifies the key for organizing the collection.
+            </summary>
+            <param name="key">Used to extract the key from the record.</param>
+            <returns>A reference to this object for Fluent construction.</returns>
+        </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.HasParent(`0)">
+            <summary>
+            Gets an indication of whether the child record has a parent.
+            </summary>
+            <param name="child">The child record.</param>
+            <returns>The parent record of the given child.</returns>
+        </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.InDoubt(System.Transactions.Enlistment)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.Prepare(System.Transactions.PreparingEnlistment)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.Rollback(System.Transactions.Enlistment)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.Remove(`0)">
+            <summary>
+            Removes a key from the index.
+            </summary>
+            <param name="value">The the value.</param>
+        </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.Update(`0)">
+            <summary>
+            Changes a key value.
+            </summary>
+            <param name="value">The new record.</param>
+        </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.HandleUniqueIndexChange(System.Object,GammaFour.Data.RecordChangeEventArgs{System.Object})">
+            <summary>
+            Handles a change in the parent unique index.
+            </summary>
+            <param name="sender">The originator of the event.</param>
+            <param name="recordChangeEventArgs">The event arguments.</param>
+        </member>
+        <member name="T:GammaFour.Data.IMergable">
+            <summary>
+            Used by a template selector to connect a view model to the template used to display it.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.IMergable.Merge(System.Collections.Generic.IEnumerable{System.Object})">
+            <summary>
+            A method to merge a record into a set.
+            </summary>
+            <param name="source">A set of records.</param>
+            <returns>The records that couldn't be merged.</returns>
+        </member>
+        <member name="T:GammaFour.Data.IPurgable">
+            <summary>
+            Used by a template selector to connect a view model to the template used to display it.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.IPurgable.Purge(System.Collections.Generic.IEnumerable{System.Object})">
+            <summary>
+            A method to purge a record from a set.
+            </summary>
+            <param name="source">A set of records.</param>
+            <returns>The records that couldn't be purged.</returns>
+        </member>
+        <member name="T:GammaFour.Data.IVersionable`1">
+            <summary>
+            Allows for the cloning of different versions of a record (original, previous, current).
+            </summary>
+            <typeparam name="TType">The type of record.</typeparam>
+        </member>
+        <member name="M:GammaFour.Data.IVersionable`1.GetVersion(GammaFour.Data.RecordVersion)">
+            <summary>
+            Gets the requested version of a record.
+            </summary>
+            <param name="recordVersion">The record version (original, previous, current).</param>
+            <returns>A clone of the requested version of the record.</returns>
+        </member>
+        <member name="T:GammaFour.Data.RecordChangeEventArgs`1">
+            <summary>
+            Arguments describing an event that changed a record.
+            </summary>
+            <typeparam name="TType">The record type.</typeparam>
+        </member>
+        <member name="P:GammaFour.Data.RecordChangeEventArgs`1.Current">
+            <summary>
+            Gets or sets the the current version of the record.
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.RecordChangeEventArgs`1.DataAction">
+            <summary>
+            Gets or sets the action that caused the change to the row.
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.RecordChangeEventArgs`1.Previous">
+            <summary>
+            Gets or sets the the previous version of the record.
+            </summary>
+        </member>
+        <member name="T:GammaFour.Data.RecordState">
+            <summary>
+            The different states of a record.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.RecordState.Added">
+            <summary>
+            The record has been added to a set.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.RecordState.Modified">
+            <summary>
+            The record has been modified.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.RecordState.Deleted">
+            <summary>
+            The record has been deleted.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.RecordState.Detached">
+            <summary>
+            The record is not part of a set.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.RecordState.Unchanged">
+            <summary>
+            The record is unchanged.
+            </summary>
+        </member>
+        <member name="T:GammaFour.Data.RecordVersion">
+            <summary>
+            The different versions of a row.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.RecordVersion.Current">
+            <summary>
+            The current version of a row.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.RecordVersion.Original">
+            <summary>
+            The original version of a row.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.RecordVersion.Previous">
+            <summary>
+            The previous version of a row.
+            </summary>
+        </member>
+        <member name="T:GammaFour.Data.Resource">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.Resource.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.Resource.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.Resource.DuplicateRecordError">
+            <summary>
+              Looks up a localized string similar to Duplicate Record..
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.Resource.RecordNotFoundError">
+            <summary>
+              Looks up a localized string similar to Record not found..
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.Resource.RecursiveLockError">
+            <summary>
+              Looks up a localized string similar to Attempt to enter a lock recursively..
+            </summary>
+        </member>
+        <member name="T:GammaFour.Data.SimpleForeignKeyIndex`2">
+            <summary>
+            An foreign key index without the transaction logic.
+            </summary>
+            <typeparam name="TChild">The child value.</typeparam>
+            <typeparam name="TParent">The parent value.</typeparam>
+        </member>
+        <member name="F:GammaFour.Data.SimpleForeignKeyIndex`2.dictionary">
+            <summary>
+            The dictionary containing the index.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.SimpleForeignKeyIndex`2.keyFunction">
+            <summary>
+            Used to get the primary key from the record.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.SimpleForeignKeyIndex`2.parentIndex">
+            <summary>
+            The parent index.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.SimpleForeignKeyIndex`2.#ctor(System.String,GammaFour.Data.SimpleUniqueKeyIndex{`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.SimpleForeignKeyIndex`2"/> class.
+            </summary>
+            <param name="name">The name of the index.</param>
+            <param name="parentIndex">The parent index.</param>
+        </member>
+        <member name="P:GammaFour.Data.SimpleForeignKeyIndex`2.Lock">
+            <summary>
+            Gets a lock used to synchronize multithreaded access.
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.SimpleForeignKeyIndex`2.Name">
+            <summary>
+            Gets the name of the index.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.SimpleForeignKeyIndex`2.Add(`0)">
+            <summary>
+            Adds a key to the index.
+            </summary>
+            <param name="value">The referenced record.</param>
+        </member>
+        <member name="M:GammaFour.Data.SimpleForeignKeyIndex`2.GetChildren(`1)">
+            <summary>
+            Finds the value indexed by the given key.
+            </summary>
+            <param name="parent">The parent record.</param>
+            <returns>The record indexed by the given key, or null if it doesn't exist.</returns>
+        </member>
+        <member name="M:GammaFour.Data.SimpleForeignKeyIndex`2.GetParent(`0)">
+            <summary>
+            Gets the parent recordd of the given child.
+            </summary>
+            <param name="child">The child record.</param>
+            <returns>The parent record of the given child.</returns>
+        </member>
+        <member name="M:GammaFour.Data.SimpleForeignKeyIndex`2.HasIndex(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Specifies the key for organizing the collection.
+            </summary>
+            <param name="key">Used to extract the key from the record.</param>
+            <returns>A reference to this object for Fluent construction.</returns>
+        </member>
+        <member name="M:GammaFour.Data.SimpleForeignKeyIndex`2.HasParent(`0)">
+            <summary>
+            Gets the parent recordd of the given child.
+            </summary>
+            <param name="child">The child record.</param>
+            <returns>The parent record of the given child.</returns>
+        </member>
+        <member name="M:GammaFour.Data.SimpleForeignKeyIndex`2.Remove(`0)">
+            <summary>
+            Removes a key from the index.
+            </summary>
+            <param name="value">The the value.</param>
+        </member>
+        <member name="M:GammaFour.Data.SimpleForeignKeyIndex`2.Update(`0)">
+            <summary>
+            Changes a key value.
+            </summary>
+            <param name="value">The new record.</param>
+        </member>
+        <member name="M:GammaFour.Data.SimpleForeignKeyIndex`2.HandleUniqueIndexChange(System.Object,GammaFour.Data.RecordChangeEventArgs{System.Object})">
+            <summary>
+            Handles a change in the parent unique index.
+            </summary>
+            <param name="sender">The originator of the event.</param>
+            <param name="recordChangeEventArgs">The event arguments.</param>
+        </member>
+        <member name="T:GammaFour.Data.SimpleUniqueKeyIndex`1">
+            <summary>
+            A unique index without the transaction logic.
+            </summary>
+            <typeparam name="TType">The value.</typeparam>
+        </member>
+        <member name="F:GammaFour.Data.SimpleUniqueKeyIndex`1.dictionary">
+            <summary>
+            The dictionary mapping the keys to the values.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.SimpleUniqueKeyIndex`1.filterFunction">
+            <summary>
+            Used to filter items that appear in the index.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.SimpleUniqueKeyIndex`1.keyFunction">
+            <summary>
+            Used to get the primary key from the record.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.SimpleUniqueKeyIndex`1.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.SimpleUniqueKeyIndex`1"/> class.
+            </summary>
+            <param name="name">The name of the index.</param>
+        </member>
+        <member name="P:GammaFour.Data.SimpleUniqueKeyIndex`1.IndexChangedHandler">
+            <summary>
+            Gets or sets the handler for when the index is changed.
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.SimpleUniqueKeyIndex`1.Lock">
+            <summary>
+            Gets a lock used to synchronize multithreaded access.
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.SimpleUniqueKeyIndex`1.Name">
+            <summary>
+            Gets the name of the index.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.SimpleUniqueKeyIndex`1.ContainsKey(System.Object)">
+            <summary>
+            Gets a value that indicates if the index contains the given key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns>True if the index contains the given key, false otherwise.</returns>
+        </member>
+        <member name="M:GammaFour.Data.SimpleUniqueKeyIndex`1.Find(System.Object)">
+            <summary>
+            Finds the value indexed by the given key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns>The record indexed by the given key, or null if it doesn't exist.</returns>
+        </member>
+        <member name="M:GammaFour.Data.SimpleUniqueKeyIndex`1.GetKey(`0)">
+            <summary>
+            Gets the key of the given record.
+            </summary>
+            <param name="value">The record.</param>
+            <returns>The key values.</returns>
+        </member>
+        <member name="M:GammaFour.Data.SimpleUniqueKeyIndex`1.HasIndex(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Specifies the key for organizing the collection.
+            </summary>
+            <param name="key">Used to extract the key from the record.</param>
+            <returns>A reference to this object for Fluent construction.</returns>
+        </member>
+        <member name="M:GammaFour.Data.SimpleUniqueKeyIndex`1.HasFilter(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Specifies the key for organizing the collection.
+            </summary>
+            <param name="filter">Used to filter items that appear in the index.</param>
+            <returns>A reference to this object for Fluent construction.</returns>
+        </member>
+        <member name="M:GammaFour.Data.SimpleUniqueKeyIndex`1.Add(`0)">
+            <summary>
+            Adds a key to the index.
+            </summary>
+            <param name="value">The referenced record.</param>
+        </member>
+        <member name="M:GammaFour.Data.SimpleUniqueKeyIndex`1.Remove(`0)">
+            <summary>
+            Removes a key from the index.
+            </summary>
+            <param name="value">The record to be removed.</param>
+        </member>
+        <member name="M:GammaFour.Data.SimpleUniqueKeyIndex`1.Update(`0)">
+            <summary>
+            Updates the key of a record in the index.
+            </summary>
+            <param name="value">The record that has changed.</param>
+        </member>
+        <member name="M:GammaFour.Data.SimpleUniqueKeyIndex`1.OnIndexChanging(GammaFour.Data.DataAction,System.Object,System.Object)">
+            <summary>
+            Handles the changing of the index.
+            </summary>
+            <param name="dataAction">The action performed (Add, Update, Delete).</param>
+            <param name="oldKey">The old key.</param>
+            <param name="newKey">The new key.</param>
+        </member>
+        <member name="T:GammaFour.Data.UniqueKeyIndex`1">
+            <summary>
+            A unique index.
+            </summary>
+            <typeparam name="TType">The value.</typeparam>
+        </member>
+        <member name="F:GammaFour.Data.UniqueKeyIndex`1.dictionary">
+            <summary>
+            The dictionary mapping the keys to the values.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.UniqueKeyIndex`1.filterFunction">
+            <summary>
+            Used to filter items that appear in the index.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.UniqueKeyIndex`1.keyFunction">
+            <summary>
+            Used to get the primary key from the record.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.UniqueKeyIndex`1.undoStack">
+            <summary>
+            The actions for undoing a transaction.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.UniqueKeyIndex`1"/> class.
+            </summary>
+            <param name="name">The name of the index.</param>
+        </member>
+        <member name="P:GammaFour.Data.UniqueKeyIndex`1.IndexChangedHandler">
+            <summary>
+            Gets or sets the handler for when the index is changed.
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.UniqueKeyIndex`1.Lock">
+            <summary>
+            Gets a lock used to synchronize multithreaded access.
+            </summary>
+        </member>
+        <member name="P:GammaFour.Data.UniqueKeyIndex`1.Name">
+            <summary>
+            Gets the name of the index.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.Commit(System.Transactions.Enlistment)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.ContainsKey(System.Object)">
+            <summary>
+            Gets a value that indicates if the index contains the given key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns>True if the index contains the given key, false otherwise.</returns>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.Find(System.Object)">
+            <summary>
+            Finds the value indexed by the given key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns>The record indexed by the given key, or null if it doesn't exist.</returns>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.GetKey(`0)">
+            <summary>
+            Gets the key of the given record.
+            </summary>
+            <param name="value">The record.</param>
+            <returns>The key values.</returns>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.HasIndex(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Specifies the key for organizing the collection.
+            </summary>
+            <param name="key">Used to extract the key from the record.</param>
+            <returns>A reference to this object for Fluent construction.</returns>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.HasFilter(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Specifies the key for organizing the collection.
+            </summary>
+            <param name="filter">Used to filter items that appear in the index.</param>
+            <returns>A reference to this object for Fluent construction.</returns>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.InDoubt(System.Transactions.Enlistment)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.Prepare(System.Transactions.PreparingEnlistment)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.Rollback(System.Transactions.Enlistment)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.Add(`0)">
+            <summary>
+            Adds a key to the index.
+            </summary>
+            <param name="value">The referenced record.</param>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.Remove(`0)">
+            <summary>
+            Removes a key from the index.
+            </summary>
+            <param name="value">The record to be removed.</param>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.Update(`0)">
+            <summary>
+            Updates the key of a record in the index.
+            </summary>
+            <param name="value">The record that has changed.</param>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.OnIndexChanging(GammaFour.Data.DataAction,System.Object,System.Object)">
+            <summary>
+            Handles the changing of the index.
+            </summary>
+            <param name="dataAction">The action performed (Add, Update, Delete).</param>
+            <param name="oldKey">The old key.</param>
+            <param name="newKey">The new key.</param>
+        </member>
+    </members>
+</doc>

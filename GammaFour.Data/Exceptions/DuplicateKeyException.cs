@@ -1,11 +1,10 @@
-// <copyright file="DuplicateKeyException.cs" company="Gamma Four, Inc.">
-//    Copyright © 2018 - Gamma Four, Inc.  All Rights Reserved.
+// <copyright file="DuplicateKeyException.cs" company="Donald Roy Airey">
+//    Copyright © 2020 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data
 {
     using System;
-    using System.Collections.ObjectModel;
 
     /// <summary>
     /// Represents errors that occur when a duplicate key is added to a unique index.
@@ -34,7 +33,7 @@ namespace GammaFour.Data
         /// <param name="index">The unique key index where the exception occurred.</param>
         /// <param name="key">The key that caused the exception.</param>
         public DuplicateKeyException(string index, object key)
-            : base("Duplicate Record.")
+            : base(Resource.DuplicateRecordError)
         {
             // Initialize the object.
             this.Index = index;

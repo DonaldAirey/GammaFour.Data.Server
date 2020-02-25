@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Description>Support library for Gamma Four data-centric applications.</Description>
-    <Copyright>Copyright © 2019 - Donald Roy Airey, Inc.  All Rights Reserved.</Copyright>
+    <Copyright>Copyright © 2020 - Donald Roy Airey, Inc.  All Rights Reserved.</Copyright>
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/GammaFour/GammaFour.Data</RepositoryUrl>
     <PackageTags>Support Library C# Data</PackageTags>
@@ -14,13 +14,14 @@
 
 <PropertyGroup>
     <PackageLicenseFile></PackageLicenseFile>
-    <Company>Gamma Four, Inc.</Company>
+    <Company>Donald Roy Airey.</Company>
     <Authors>Donald R. Airey</Authors>
     <RepositoryType>GIT</RepositoryType>
-    <AssemblyVersion>1.13.0.0</AssemblyVersion>
-    <FileVersion>1.13.0.0</FileVersion>
-    <Version>1.14.0</Version>
+    <AssemblyVersion>1.17.0.0</AssemblyVersion>
+    <FileVersion>1.17.0.0</FileVersion>
+    <Version>1.17.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <NeutralLanguage>en-US</NeutralLanguage>
 </PropertyGroup>
 
 <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|AnyCPU'">
@@ -29,16 +30,49 @@
   <Optimize>true</Optimize>
   <WarningsAsErrors />
   <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  <DocumentationFile>C:\Source\GammaFour.Data\GammaFour.Data\bin\Production\netstandard2.0\GammaFour.Data.xml</DocumentationFile>
+  <DocumentationFile>GammaFour.Data.xml</DocumentationFile>
+  <OutputPath>bin\Production\netstandard2.0\</OutputPath>
 </PropertyGroup>
 
 <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|AnyCPU'">
-  <DocumentationFile>C:\Source\GammaFour.Data\GammaFour.Data\bin\Development\netstandard2.0\GammaFour.Data.xml</DocumentationFile>
+  <DocumentationFile>GammaFour.Data.xml</DocumentationFile>
   <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   <WarningsAsErrors />
   <Optimize>false</Optimize>
   <DefineConstants>DEBUG;TRACE</DefineConstants>
   <NoWarn />
+  <OutputPath>bin\Development\netstandard2.0\</OutputPath>
 </PropertyGroup>
+
+<ItemGroup>
+  <AdditionalFiles Include="stylecop.json" />
+</ItemGroup>
+
+<ItemGroup>
+  <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+    <PrivateAssets>all</PrivateAssets>
+    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+  </PackageReference>
+  <PackageReference Include="Microsoft.VisualStudio.Threading" Version="16.5.132" />
+  <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+    <PrivateAssets>all</PrivateAssets>
+    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+  </PackageReference>
+</ItemGroup>
+
+<ItemGroup>
+  <Compile Update="Resource.Designer.cs">
+    <DesignTime>True</DesignTime>
+    <AutoGen>True</AutoGen>
+    <DependentUpon>Resource.resx</DependentUpon>
+  </Compile>
+</ItemGroup>
+
+<ItemGroup>
+  <EmbeddedResource Update="Resource.resx">
+    <Generator>ResXFileCodeGenerator</Generator>
+    <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+  </EmbeddedResource>
+</ItemGroup>
 
 </Project>
