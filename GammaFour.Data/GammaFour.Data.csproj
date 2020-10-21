@@ -5,10 +5,8 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Description>Support library for Gamma Four data-centric applications.</Description>
     <Copyright>Copyright © 2020 - Donald Roy Airey, Inc.  All Rights Reserved.</Copyright>
-    <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/GammaFour/GammaFour.Data</RepositoryUrl>
     <PackageTags>Support Library C# Data</PackageTags>
-    <PackageIconUrl>https://i.imgur.com/TI9hwe0.png</PackageIconUrl>
     <Configurations>Development;Production</Configurations>
   </PropertyGroup>
 
@@ -17,11 +15,12 @@
     <Company>Donald Roy Airey.</Company>
     <Authors>Donald R. Airey</Authors>
     <RepositoryType>GIT</RepositoryType>
-    <AssemblyVersion>1.17.0.0</AssemblyVersion>
-    <FileVersion>1.17.0.0</FileVersion>
-    <Version>1.17.0</Version>
+    <AssemblyVersion>1.17.1.0</AssemblyVersion>
+    <FileVersion>1.17.1.0</FileVersion>
+    <Version>1.17.1</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageIcon></PackageIcon>
 </PropertyGroup>
 
 <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|AnyCPU'">
@@ -45,15 +44,21 @@
 </PropertyGroup>
 
 <ItemGroup>
+  <None Remove="Resources\Package.png" />
+  <None Remove="Resources\Package.png" />
+  <None Remove="Resources\Package.png" />
+</ItemGroup>
+
+<ItemGroup>
   <AdditionalFiles Include="stylecop.json" />
 </ItemGroup>
 
 <ItemGroup>
-  <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+  <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
     <PrivateAssets>all</PrivateAssets>
     <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
   </PackageReference>
-  <PackageReference Include="Microsoft.VisualStudio.Threading" Version="16.5.132" />
+  <PackageReference Include="Microsoft.VisualStudio.Threading" Version="16.7.56" />
   <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
     <PrivateAssets>all</PrivateAssets>
     <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -73,6 +78,10 @@
     <Generator>ResXFileCodeGenerator</Generator>
     <LastGenOutput>Resource.Designer.cs</LastGenOutput>
   </EmbeddedResource>
+</ItemGroup>
+
+<ItemGroup>
+  <Folder Include="Resources\" />
 </ItemGroup>
 
 </Project>
