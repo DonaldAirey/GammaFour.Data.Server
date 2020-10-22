@@ -15,12 +15,12 @@
     <Company>Donald Roy Airey.</Company>
     <Authors>Donald R. Airey</Authors>
     <RepositoryType>GIT</RepositoryType>
-    <AssemblyVersion>1.17.1.0</AssemblyVersion>
-    <FileVersion>1.17.1.0</FileVersion>
-    <Version>1.17.1</Version>
+    <AssemblyVersion>1.18.0.0</AssemblyVersion>
+    <FileVersion>1.18.0.0</FileVersion>
+    <Version>1.18.0.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageIcon></PackageIcon>
+    <PackageIcon>Package.png</PackageIcon>
 </PropertyGroup>
 
 <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|AnyCPU'">
@@ -47,6 +47,10 @@
   <None Remove="Resources\Package.png" />
   <None Remove="Resources\Package.png" />
   <None Remove="Resources\Package.png" />
+  <None Include="Resources\Package.png">
+    <Pack>True</Pack>
+    <PackagePath></PackagePath>
+  </None>
 </ItemGroup>
 
 <ItemGroup>
