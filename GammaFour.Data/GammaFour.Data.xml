@@ -49,36 +49,6 @@
             MySql
             </summary>
         </member>
-        <member name="T:GammaFour.Data.DisposableList">
-            <summary>
-            A collection of objects that will be disposed.
-            </summary>
-        </member>
-        <member name="F:GammaFour.Data.DisposableList.list">
-            <summary>
-            This is the list of items that will be disposed when this object is disposed.
-            </summary>
-        </member>
-        <member name="M:GammaFour.Data.DisposableList.Add(System.IDisposable)">
-            <summary>
-            Add a disposable element to the list.
-            </summary>
-            <param name="disposable">The disposable object.</param>
-        </member>
-        <member name="M:GammaFour.Data.DisposableList.Dispose">
-            <inheritdoc/>
-        </member>
-        <member name="T:GammaFour.Data.EnlistmentNotificationExtensions">
-            <summary>
-            Extensions to help with enlisting in a transaction.
-            </summary>
-        </member>
-        <member name="M:GammaFour.Data.EnlistmentNotificationExtensions.Enlist(System.Transactions.IEnlistmentNotification)">
-            <summary>
-            Enlists a <see cref="T:System.Transactions.IEnlistmentNotification"/> object in the current transaction.
-            </summary>
-            <param name="enlistmentNotification">The object to be enlisted in the current transaction.</param>
-        </member>
         <member name="T:GammaFour.Data.ConstraintException">
             <summary>
             Represents errors that occur when locking records for a transaction.
@@ -216,19 +186,24 @@
             The dictionary containing the index.
             </summary>
         </member>
-        <member name="F:GammaFour.Data.ForeignKeyIndex`2.keyFunction">
-            <summary>
-            Used to get the primary key from the record.
-            </summary>
-        </member>
         <member name="F:GammaFour.Data.ForeignKeyIndex`2.parentIndex">
             <summary>
             The parent index.
             </summary>
         </member>
+        <member name="F:GammaFour.Data.ForeignKeyIndex`2.semaphoreSlim">
+            <summary>
+            Gets a lock used to synchronize multithreaded access.
+            </summary>
+        </member>
         <member name="F:GammaFour.Data.ForeignKeyIndex`2.undoStack">
             <summary>
             The actions for undoing a transaction.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.ForeignKeyIndex`2.keyFunction">
+            <summary>
+            Used to get the primary key from the record.
             </summary>
         </member>
         <member name="M:GammaFour.Data.ForeignKeyIndex`2.#ctor(System.String,GammaFour.Data.UniqueKeyIndex{`1})">
@@ -237,11 +212,6 @@
             </summary>
             <param name="name">The name of the index.</param>
             <param name="parentIndex">The parent index.</param>
-        </member>
-        <member name="P:GammaFour.Data.ForeignKeyIndex`2.Lock">
-            <summary>
-            Gets a lock used to synchronize multithreaded access.
-            </summary>
         </member>
         <member name="P:GammaFour.Data.ForeignKeyIndex`2.Name">
             <summary>
@@ -291,6 +261,9 @@
         <member name="M:GammaFour.Data.ForeignKeyIndex`2.Prepare(System.Transactions.PreparingEnlistment)">
             <inheritdoc/>
         </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.Release">
+            <inheritdoc/>
+        </member>
         <member name="M:GammaFour.Data.ForeignKeyIndex`2.Rollback(System.Transactions.Enlistment)">
             <inheritdoc/>
         </member>
@@ -306,12 +279,32 @@
             </summary>
             <param name="value">The new record.</param>
         </member>
+        <member name="M:GammaFour.Data.ForeignKeyIndex`2.WaitAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="M:GammaFour.Data.ForeignKeyIndex`2.HandleUniqueIndexChange(System.Object,GammaFour.Data.RecordChangeEventArgs{System.Object})">
             <summary>
             Handles a change in the parent unique index.
             </summary>
             <param name="sender">The originator of the event.</param>
             <param name="recordChangeEventArgs">The event arguments.</param>
+        </member>
+        <member name="T:GammaFour.Data.ILockable">
+            <summary>
+            An object that can be locked and released.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.ILockable.WaitAsync(System.Threading.CancellationToken)">
+            <summary>
+            Waits for the thread to enter a lock.
+            </summary>
+            <param name="cancellationToken">The CancellationToken to observe.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:GammaFour.Data.ILockable.Release">
+            <summary>
+            Release the lock.
+            </summary>
         </member>
         <member name="T:GammaFour.Data.IMergable">
             <summary>
@@ -349,6 +342,64 @@
             </summary>
             <param name="recordVersion">The record version (original, previous, current).</param>
             <returns>A clone of the requested version of the record.</returns>
+        </member>
+        <member name="T:GammaFour.Data.LockingTransaction">
+            <summary>
+            An extension to the <see cref="T:System.Transactions.TransactionScope"/> that also handles resource locking.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.LockingTransaction.cancellationTokenSource">
+            <summary>
+            Implicit cancellation token source for when non is supplied by the caller.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.LockingTransaction.transaction">
+            <summary>
+            The transaction.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.LockingTransaction.transactionScope">
+            <summary>
+            Provides a transactional code block.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.LockingTransaction.locks">
+            <summary>
+            Collection of locks for the resources used by the transactional code block.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.LockingTransaction.cancellationToken">
+            <summary>
+            A cancellation token provided by the caller.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.LockingTransaction.#ctor(System.TimeSpan,System.Threading.CancellationToken)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GammaFour.Data.LockingTransaction"/> class.
+            </summary>
+            <param name="transactionTimeout">The TimeSpan after which the transaction scope times out and aborts the transaction.</param>
+            <param name="cancellationToken">Used to cancel the entire transaction.</param>
+        </member>
+        <member name="M:GammaFour.Data.LockingTransaction.Complete">
+            <summary>
+            Indicates that all operations within the scope are completed successfully.
+            </summary>
+        </member>
+        <member name="M:GammaFour.Data.LockingTransaction.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:GammaFour.Data.LockingTransaction.WaitAsync(GammaFour.Data.ILockable)">
+            <summary>
+            Asynchronously waits to enter the transaction.
+            </summary>
+            <param name="lockable">An object that can be locked for the duration of a transaction.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:GammaFour.Data.LockingTransaction.Dispose(System.Boolean)">
+            <summary>
+            Dispose of the managed resources.
+            </summary>
+            <param name="disposing">An indication whether the managed resources are to be disposed.</param>
         </member>
         <member name="T:GammaFour.Data.RecordChangeEventArgs`1">
             <summary>
@@ -464,14 +515,19 @@
             The dictionary containing the index.
             </summary>
         </member>
-        <member name="F:GammaFour.Data.SimpleForeignKeyIndex`2.keyFunction">
-            <summary>
-            Used to get the primary key from the record.
-            </summary>
-        </member>
         <member name="F:GammaFour.Data.SimpleForeignKeyIndex`2.parentIndex">
             <summary>
             The parent index.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.SimpleForeignKeyIndex`2.semaphoreSlim">
+            <summary>
+            Gets a lock used to synchronize multithreaded access.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.SimpleForeignKeyIndex`2.keyFunction">
+            <summary>
+            Used to get the primary key from the record.
             </summary>
         </member>
         <member name="M:GammaFour.Data.SimpleForeignKeyIndex`2.#ctor(System.String,GammaFour.Data.SimpleUniqueKeyIndex{`1})">
@@ -480,11 +536,6 @@
             </summary>
             <param name="name">The name of the index.</param>
             <param name="parentIndex">The parent index.</param>
-        </member>
-        <member name="P:GammaFour.Data.SimpleForeignKeyIndex`2.Lock">
-            <summary>
-            Gets a lock used to synchronize multithreaded access.
-            </summary>
         </member>
         <member name="P:GammaFour.Data.SimpleForeignKeyIndex`2.Name">
             <summary>
@@ -525,6 +576,9 @@
             <param name="child">The child record.</param>
             <returns>The parent record of the given child.</returns>
         </member>
+        <member name="M:GammaFour.Data.SimpleForeignKeyIndex`2.Release">
+            <inheritdoc/>
+        </member>
         <member name="M:GammaFour.Data.SimpleForeignKeyIndex`2.Remove(`0)">
             <summary>
             Removes a key from the index.
@@ -536,6 +590,9 @@
             Changes a key value.
             </summary>
             <param name="value">The new record.</param>
+        </member>
+        <member name="M:GammaFour.Data.SimpleForeignKeyIndex`2.WaitAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
         </member>
         <member name="M:GammaFour.Data.SimpleForeignKeyIndex`2.HandleUniqueIndexChange(System.Object,GammaFour.Data.RecordChangeEventArgs{System.Object})">
             <summary>
@@ -553,6 +610,11 @@
         <member name="F:GammaFour.Data.SimpleUniqueKeyIndex`1.dictionary">
             <summary>
             The dictionary mapping the keys to the values.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.SimpleUniqueKeyIndex`1.semaphoreSlim">
+            <summary>
+            Gets a lock used to synchronize multithreaded access.
             </summary>
         </member>
         <member name="F:GammaFour.Data.SimpleUniqueKeyIndex`1.filterFunction">
@@ -574,11 +636,6 @@
         <member name="P:GammaFour.Data.SimpleUniqueKeyIndex`1.IndexChangedHandler">
             <summary>
             Gets or sets the handler for when the index is changed.
-            </summary>
-        </member>
-        <member name="P:GammaFour.Data.SimpleUniqueKeyIndex`1.Lock">
-            <summary>
-            Gets a lock used to synchronize multithreaded access.
             </summary>
         </member>
         <member name="P:GammaFour.Data.SimpleUniqueKeyIndex`1.Name">
@@ -627,6 +684,9 @@
             </summary>
             <param name="value">The referenced record.</param>
         </member>
+        <member name="M:GammaFour.Data.SimpleUniqueKeyIndex`1.Release">
+            <inheritdoc/>
+        </member>
         <member name="M:GammaFour.Data.SimpleUniqueKeyIndex`1.Remove(`0)">
             <summary>
             Removes a key from the index.
@@ -638,6 +698,9 @@
             Updates the key of a record in the index.
             </summary>
             <param name="value">The record that has changed.</param>
+        </member>
+        <member name="M:GammaFour.Data.SimpleUniqueKeyIndex`1.WaitAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
         </member>
         <member name="M:GammaFour.Data.SimpleUniqueKeyIndex`1.OnIndexChanging(GammaFour.Data.DataAction,System.Object,System.Object)">
             <summary>
@@ -658,6 +721,16 @@
             The dictionary mapping the keys to the values.
             </summary>
         </member>
+        <member name="F:GammaFour.Data.UniqueKeyIndex`1.semaphoreSlim">
+            <summary>
+            Gets a lock used to synchronize multithreaded access.
+            </summary>
+        </member>
+        <member name="F:GammaFour.Data.UniqueKeyIndex`1.undoStack">
+            <summary>
+            The actions for undoing a transaction.
+            </summary>
+        </member>
         <member name="F:GammaFour.Data.UniqueKeyIndex`1.filterFunction">
             <summary>
             Used to filter items that appear in the index.
@@ -666,11 +739,6 @@
         <member name="F:GammaFour.Data.UniqueKeyIndex`1.keyFunction">
             <summary>
             Used to get the primary key from the record.
-            </summary>
-        </member>
-        <member name="F:GammaFour.Data.UniqueKeyIndex`1.undoStack">
-            <summary>
-            The actions for undoing a transaction.
             </summary>
         </member>
         <member name="M:GammaFour.Data.UniqueKeyIndex`1.#ctor(System.String)">
@@ -682,11 +750,6 @@
         <member name="P:GammaFour.Data.UniqueKeyIndex`1.IndexChangedHandler">
             <summary>
             Gets or sets the handler for when the index is changed.
-            </summary>
-        </member>
-        <member name="P:GammaFour.Data.UniqueKeyIndex`1.Lock">
-            <summary>
-            Gets a lock used to synchronize multithreaded access.
             </summary>
         </member>
         <member name="P:GammaFour.Data.UniqueKeyIndex`1.Name">
@@ -738,6 +801,9 @@
         <member name="M:GammaFour.Data.UniqueKeyIndex`1.Prepare(System.Transactions.PreparingEnlistment)">
             <inheritdoc/>
         </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.Release">
+            <inheritdoc/>
+        </member>
         <member name="M:GammaFour.Data.UniqueKeyIndex`1.Rollback(System.Transactions.Enlistment)">
             <inheritdoc/>
         </member>
@@ -758,6 +824,9 @@
             Updates the key of a record in the index.
             </summary>
             <param name="value">The record that has changed.</param>
+        </member>
+        <member name="M:GammaFour.Data.UniqueKeyIndex`1.WaitAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
         </member>
         <member name="M:GammaFour.Data.UniqueKeyIndex`1.OnIndexChanging(GammaFour.Data.DataAction,System.Object,System.Object)">
             <summary>

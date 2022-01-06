@@ -1,5 +1,5 @@
 ﻿// <copyright file="ForeignKeyIndex{TChild,TParent}.cs" company="Donald Roy Airey">
-//    Copyright © 2020 - Donald Roy Airey.  All Rights Reserved.
+//    Copyright © 2021 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data
@@ -7,37 +7,43 @@ namespace GammaFour.Data
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Transactions;
-    using Microsoft.VisualStudio.Threading;
 
     /// <summary>
     /// An index.
     /// </summary>
     /// <typeparam name="TChild">The child value.</typeparam>
     /// <typeparam name="TParent">The parent value.</typeparam>
-    public class ForeignKeyIndex<TChild, TParent> : IEnlistmentNotification
+    public class ForeignKeyIndex<TChild, TParent> : IEnlistmentNotification, ILockable
         where TParent : IVersionable<TParent>
         where TChild : IVersionable<TChild>
     {
         /// <summary>
         /// The dictionary containing the index.
         /// </summary>
-        private Dictionary<object, HashSet<TChild>> dictionary;
+        private readonly Dictionary<object, HashSet<TChild>> dictionary = new Dictionary<object, HashSet<TChild>>();
+
+        /// <summary>
+        /// The parent index.
+        /// </summary>
+        private readonly UniqueKeyIndex<TParent> parentIndex;
+
+        /// <summary>
+        /// Gets a lock used to synchronize multithreaded access.
+        /// </summary>
+        private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
+
+        /// <summary>
+        /// The actions for undoing a transaction.
+        /// </summary>
+        private readonly Stack<Action> undoStack = new Stack<Action>();
 
         /// <summary>
         /// Used to get the primary key from the record.
         /// </summary>
         private Func<TChild, object> keyFunction;
-
-        /// <summary>
-        /// The parent index.
-        /// </summary>
-        private UniqueKeyIndex<TParent> parentIndex;
-
-        /// <summary>
-        /// The actions for undoing a transaction.
-        /// </summary>
-        private Stack<Action> undoStack = new Stack<Action>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ForeignKeyIndex{TChild, TParent}"/> class.
@@ -49,22 +55,10 @@ namespace GammaFour.Data
             // Initialize the object.
             this.Name = name;
             this.parentIndex = parentIndex;
-            this.dictionary = new Dictionary<object, HashSet<TChild>>();
-
-            // Validate the argument.
-            if (parentIndex == null)
-            {
-                throw new ArgumentNullException(nameof(parentIndex));
-            }
 
             // This instructs the parent key to inform this object about any changes.
             this.parentIndex.IndexChangedHandler += this.HandleUniqueIndexChange;
         }
-
-        /// <summary>
-        /// Gets a lock used to synchronize multithreaded access.
-        /// </summary>
-        public AsyncReaderWriterLock Lock { get; } = new AsyncReaderWriterLock();
 
         /// <summary>
         /// Gets the name of the index.
@@ -227,6 +221,13 @@ namespace GammaFour.Data
         }
 
         /// <inheritdoc/>
+        public void Release()
+        {
+            // Releases the semaphore.
+            this.semaphoreSlim.Release();
+        }
+
+        /// <inheritdoc/>
         public void Rollback(Enlistment enlistment)
         {
             // Undo every action in the reverse order that it was enlisted.
@@ -361,6 +362,13 @@ namespace GammaFour.Data
                     }
                 });
             }
+        }
+
+        /// <inheritdoc/>
+        public async Task WaitAsync(CancellationToken cancellationToken)
+        {
+            // The semaphore is used to lock the object for the duration of a transaction, or until cancelled.
+            await this.semaphoreSlim.WaitAsync(cancellationToken);
         }
 
         /// <summary>

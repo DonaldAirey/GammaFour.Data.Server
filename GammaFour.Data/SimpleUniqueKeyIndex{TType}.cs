@@ -1,5 +1,5 @@
 ﻿// <copyright file="SimpleUniqueKeyIndex{TType}.cs" company="Donald Roy Airey">
-//    Copyright © 2020 - Donald Roy Airey.  All Rights Reserved.
+//    Copyright © 2021 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data
@@ -7,19 +7,25 @@ namespace GammaFour.Data
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
-    using Microsoft.VisualStudio.Threading;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// A unique index without the transaction logic.
     /// </summary>
     /// <typeparam name="TType">The value.</typeparam>
-    public class SimpleUniqueKeyIndex<TType>
+    public class SimpleUniqueKeyIndex<TType> : ILockable
         where TType : IVersionable<TType>
     {
         /// <summary>
         /// The dictionary mapping the keys to the values.
         /// </summary>
-        private Dictionary<object, TType> dictionary;
+        private readonly Dictionary<object, TType> dictionary = new Dictionary<object, TType>();
+
+        /// <summary>
+        /// Gets a lock used to synchronize multithreaded access.
+        /// </summary>
+        private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Used to filter items that appear in the index.
@@ -39,18 +45,12 @@ namespace GammaFour.Data
         {
             // Initialize the object.
             this.Name = name;
-            this.dictionary = new Dictionary<object, TType>();
         }
 
         /// <summary>
         /// Gets or sets the handler for when the index is changed.
         /// </summary>
         public EventHandler<RecordChangeEventArgs<object>> IndexChangedHandler { get; set; }
-
-        /// <summary>
-        /// Gets a lock used to synchronize multithreaded access.
-        /// </summary>
-        public AsyncReaderWriterLock Lock { get; } = new AsyncReaderWriterLock();
 
         /// <summary>
         /// Gets the name of the index.
@@ -140,6 +140,13 @@ namespace GammaFour.Data
             }
         }
 
+        /// <inheritdoc/>
+        public void Release()
+        {
+            // Releases the semaphore.
+            this.semaphoreSlim.Release();
+        }
+
         /// <summary>
         /// Removes a key from the index.
         /// </summary>
@@ -186,6 +193,13 @@ namespace GammaFour.Data
 
             // Notify when the index has changed.
             this.OnIndexChanging(DataAction.Update, oldKey, newKey);
+        }
+
+        /// <inheritdoc/>
+        public async Task WaitAsync(CancellationToken cancellationToken)
+        {
+            // The semaphore is used to lock the object for the duration of a transaction, or until cancelled.
+            await this.semaphoreSlim.WaitAsync(cancellationToken);
         }
 
         /// <summary>

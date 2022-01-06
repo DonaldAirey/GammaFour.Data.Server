@@ -4,44 +4,50 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Description>Support library for Gamma Four data-centric applications.</Description>
-    <Copyright>Copyright © 2020 - Donald Roy Airey, Inc.  All Rights Reserved.</Copyright>
+    <Copyright>Copyright © 2021 - Donald Roy Airey, Inc.  All Rights Reserved.</Copyright>
     <RepositoryUrl>https://github.com/GammaFour/GammaFour.Data</RepositoryUrl>
     <PackageTags>Support Library C# Data</PackageTags>
-    <Configurations>Development;Production</Configurations>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
 <PropertyGroup>
     <PackageLicenseFile></PackageLicenseFile>
-    <Company>Donald Roy Airey.</Company>
+    <Company>Donald Roy Airey</Company>
     <Authors>Donald R. Airey</Authors>
     <RepositoryType>GIT</RepositoryType>
-    <AssemblyVersion>1.18.0.0</AssemblyVersion>
-    <FileVersion>1.18.0.0</FileVersion>
-    <Version>1.18.0.0</Version>
+    <AssemblyVersion>2.1.0</AssemblyVersion>
+    <FileVersion>2.1.0</FileVersion>
+    <Version>2.1.1</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIcon>Package.png</PackageIcon>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
 </PropertyGroup>
 
-<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|AnyCPU'">
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
   <NoWarn />
   <DefineConstants />
-  <Optimize>true</Optimize>
+  <Optimize>True</Optimize>
   <WarningsAsErrors />
   <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  <DocumentationFile>GammaFour.Data.xml</DocumentationFile>
-  <OutputPath>bin\Production\netstandard2.0\</OutputPath>
+  <DocumentationFile>bin\Debug\GammaFour.Data.xml</DocumentationFile>
+  <OutputPath>bin\Release\netstandard2.0\</OutputPath>
 </PropertyGroup>
 
-<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|AnyCPU'">
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
   <DocumentationFile>GammaFour.Data.xml</DocumentationFile>
   <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   <WarningsAsErrors />
-  <Optimize>false</Optimize>
-  <DefineConstants>DEBUG;TRACE</DefineConstants>
+  <Optimize>False</Optimize>
+  <DefineConstants></DefineConstants>
   <NoWarn />
-  <OutputPath>bin\Development\netstandard2.0\</OutputPath>
+  <OutputPath>bin\Debug\netstandard2.0\</OutputPath>
 </PropertyGroup>
+
+<ItemGroup>
+  <Compile Remove="LockingTransaction - Copy.cs" />
+</ItemGroup>
 
 <ItemGroup>
   <None Remove="Resources\Package.png" />
@@ -58,11 +64,10 @@
 </ItemGroup>
 
 <ItemGroup>
-  <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
+  <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
     <PrivateAssets>all</PrivateAssets>
     <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
   </PackageReference>
-  <PackageReference Include="Microsoft.VisualStudio.Threading" Version="16.7.56" />
   <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
     <PrivateAssets>all</PrivateAssets>
     <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
