@@ -123,7 +123,4 @@
   <data name="RecordNotFoundError" xml:space="preserve">
     <value>Record not found.</value>
   </data>
-  <data name="RecursiveLockError" xml:space="preserve">
-    <value>Attempt to enter a lock recursively.</value>
-  </data>
 </root>

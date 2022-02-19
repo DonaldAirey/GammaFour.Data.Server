@@ -1,5 +1,5 @@
 // <copyright file="RecordNotFoundException.cs" company="Donald Roy Airey">
-//    Copyright © 2020 - Donald Roy Airey.  All Rights Reserved.
+//    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data
@@ -15,22 +15,6 @@ namespace GammaFour.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="RecordNotFoundException"/> class.
         /// </summary>
-        public RecordNotFoundException()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RecordNotFoundException"/> class.
-        /// </summary>
-        /// <param name="message">The message that describes the error.</param>
-        public RecordNotFoundException(string message)
-            : base(message)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RecordNotFoundException"/> class.
-        /// </summary>
         /// <param name="table">The table where the exception occurred.</param>
         /// <param name="key">The key that caused the exception.</param>
         public RecordNotFoundException(string table, object[] key)
@@ -42,24 +26,13 @@ namespace GammaFour.Data
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RecordNotFoundException"/> class.
-        /// </summary>
-        /// <param name="message">The message that gives more information about the Win32 error.</param>
-        /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner
-        /// exception is specified.</param>
-        public RecordNotFoundException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
-        /// <summary>
         /// Gets the table where the exception occurred.
         /// </summary>
-        public string Table { get; private set; }
+        public string Table { get; }
 
         /// <summary>
         /// Gets the key that caused the exception.
         /// </summary>
-        public ReadOnlyCollection<object> Key { get; private set; }
+        public ReadOnlyCollection<object> Key { get; }
     }
 }

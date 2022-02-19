@@ -1,5 +1,5 @@
 ﻿// <copyright file="RecordState.cs" company="Donald Roy Airey">
-//    Copyright © 2020 - Donald Roy Airey.  All Rights Reserved.
+//    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data

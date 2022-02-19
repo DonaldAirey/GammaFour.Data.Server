@@ -1,5 +1,5 @@
 // <copyright file="ConstraintException.cs" company="Donald Roy Airey">
-//    Copyright © 2020 - Donald Roy Airey.  All Rights Reserved.
+//    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data
@@ -14,24 +14,6 @@ namespace GammaFour.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstraintException"/> class.
         /// </summary>
-        public ConstraintException()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConstraintException"/> class.
-        /// </summary>
-        /// <param name="operation">the operation where the constraint violation occurred.</param>
-        public ConstraintException(string operation)
-        {
-            // Initialize the object.
-            this.Operation = operation;
-            this.Constraint = "Not specified";
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConstraintException"/> class.
-        /// </summary>
         /// <param name="operation">the operation where the constraint violation occurred.</param>
         /// <param name="constraint">The constraint that was violated.</param>
         public ConstraintException(string operation, string constraint)
@@ -42,24 +24,13 @@ namespace GammaFour.Data
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConstraintException"/> class.
-        /// </summary>
-        /// <param name="message">The message that gives more information about the Win32 error.</param>
-        /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner
-        /// exception is specified.</param>
-        public ConstraintException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
-        /// <summary>
         /// Gets the constraint that was violated.
         /// </summary>
-        public string Constraint { get; private set; }
+        public string? Constraint { get; }
 
         /// <summary>
         /// Gets the operation where the constraint violation occurred.
         /// </summary>
-        public string Operation { get; private set; }
+        public string? Operation { get; }
     }
 }

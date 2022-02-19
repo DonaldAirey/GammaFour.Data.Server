@@ -1,91 +1,45 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Description>Support library for Gamma Four data-centric applications.</Description>
-    <Copyright>Copyright © 2020 - Donald Roy Airey, Inc.  All Rights Reserved.</Copyright>
-    <RepositoryUrl>https://github.com/GammaFour/GammaFour.Data</RepositoryUrl>
-    <PackageTags>Support Library C# Data</PackageTags>
-    <Configurations>Development;Production</Configurations>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
-<PropertyGroup>
-    <PackageLicenseFile></PackageLicenseFile>
-    <Company>Donald Roy Airey.</Company>
-    <Authors>Donald R. Airey</Authors>
-    <RepositoryType>GIT</RepositoryType>
-    <AssemblyVersion>1.18.0.0</AssemblyVersion>
-    <FileVersion>1.18.0.0</FileVersion>
-    <Version>1.18.0.0</Version>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageIcon>Package.png</PackageIcon>
-</PropertyGroup>
+  <ItemGroup>
+    <None Remove="stylecop.json" />
+  </ItemGroup>
 
-<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|AnyCPU'">
-  <NoWarn />
-  <DefineConstants />
-  <Optimize>true</Optimize>
-  <WarningsAsErrors />
-  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  <DocumentationFile>GammaFour.Data.xml</DocumentationFile>
-  <OutputPath>bin\Production\netstandard2.0\</OutputPath>
-</PropertyGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
 
-<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|AnyCPU'">
-  <DocumentationFile>GammaFour.Data.xml</DocumentationFile>
-  <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-  <WarningsAsErrors />
-  <Optimize>false</Optimize>
-  <DefineConstants>DEBUG;TRACE</DefineConstants>
-  <NoWarn />
-  <OutputPath>bin\Development\netstandard2.0\</OutputPath>
-</PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="DotNext.Threading" Version="4.2.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
-<ItemGroup>
-  <None Remove="Resources\Package.png" />
-  <None Remove="Resources\Package.png" />
-  <None Remove="Resources\Package.png" />
-  <None Include="Resources\Package.png">
-    <Pack>True</Pack>
-    <PackagePath></PackagePath>
-  </None>
-</ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
 
-<ItemGroup>
-  <AdditionalFiles Include="stylecop.json" />
-</ItemGroup>
-
-<ItemGroup>
-  <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
-    <PrivateAssets>all</PrivateAssets>
-    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-  </PackageReference>
-  <PackageReference Include="Microsoft.VisualStudio.Threading" Version="16.7.56" />
-  <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-    <PrivateAssets>all</PrivateAssets>
-    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-  </PackageReference>
-</ItemGroup>
-
-<ItemGroup>
-  <Compile Update="Resource.Designer.cs">
-    <DesignTime>True</DesignTime>
-    <AutoGen>True</AutoGen>
-    <DependentUpon>Resource.resx</DependentUpon>
-  </Compile>
-</ItemGroup>
-
-<ItemGroup>
-  <EmbeddedResource Update="Resource.resx">
-    <Generator>ResXFileCodeGenerator</Generator>
-    <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-  </EmbeddedResource>
-</ItemGroup>
-
-<ItemGroup>
-  <Folder Include="Resources\" />
-</ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 
 </Project>

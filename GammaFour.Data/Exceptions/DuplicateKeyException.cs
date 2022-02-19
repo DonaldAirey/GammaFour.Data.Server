@@ -1,5 +1,5 @@
 // <copyright file="DuplicateKeyException.cs" company="Donald Roy Airey">
-//    Copyright © 2020 - Donald Roy Airey.  All Rights Reserved.
+//    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data
@@ -56,11 +56,11 @@ namespace GammaFour.Data
         /// <summary>
         /// Gets the index where the exception occurred.
         /// </summary>
-        public string Index { get; private set; }
+        public string? Index { get; }
 
         /// <summary>
         /// Gets the key that caused the exception.
         /// </summary>
-        public object Key { get; private set; }
+        public object? Key { get; }
     }
 }
