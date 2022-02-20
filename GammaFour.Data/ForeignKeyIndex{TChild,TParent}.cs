@@ -157,7 +157,7 @@ namespace GammaFour.Data
         public TParent? GetParent(TChild child)
         {
             // Find the parent record.
-            return this.parentIndex.Find(this.keyFunction(child));
+            return this.filterFunction(child) ? this.parentIndex.Find(this.keyFunction(child)) : default;
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace GammaFour.Data
         public bool HasParent(TChild child)
         {
             // Return the parent record.
-            return this.parentIndex.Find(this.keyFunction(child)) != null;
+            return !this.filterFunction(child) || this.parentIndex.Find(this.keyFunction(child)) != null;
         }
 
         /// <inheritdoc/>
