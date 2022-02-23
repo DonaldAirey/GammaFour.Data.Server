@@ -217,8 +217,8 @@ namespace GammaFour.Data
             object previousKey = this.keyFunction(previousValue);
             object currentKey = this.keyFunction(value);
 
-            // Make sure there's something to change.
-            if (!previousKey.Equals(currentKey))
+            // Update should only perform work when the values are different.
+            if (!object.Equals(previousKey, currentKey))
             {
                 // Make sure the key was properly removed before we push an undo operation on the stack.  Removing an item that isn't part of the
                 // index is not considered an exception.

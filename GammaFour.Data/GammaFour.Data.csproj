@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>3.0.2</Version>
+    <Version>3.0.3</Version>
     <Description>Support package for Gamma Four Data Model Generator output.</Description>
     <Copyright>Copyright (C) 2022 - Donald Airey - All rights reserved.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
