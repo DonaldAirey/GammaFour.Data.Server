@@ -2,7 +2,7 @@
 //    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
-namespace GammaFour.Data
+namespace GammaFour.Data.Server
 {
     using System;
 
@@ -56,11 +56,11 @@ namespace GammaFour.Data
         /// <summary>
         /// Gets the index where the exception occurred.
         /// </summary>
-        public string? Index { get; }
+        public string Index { get; }
 
         /// <summary>
         /// Gets the key that caused the exception.
         /// </summary>
-        public object? Key { get; }
+        public object Key { get; }
     }
 }

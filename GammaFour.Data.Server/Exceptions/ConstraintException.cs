@@ -2,7 +2,7 @@
 //    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
-namespace GammaFour.Data
+namespace GammaFour.Data.Server
 {
     using System;
 
@@ -26,11 +26,11 @@ namespace GammaFour.Data
         /// <summary>
         /// Gets the constraint that was violated.
         /// </summary>
-        public string? Constraint { get; }
+        public string Constraint { get; }
 
         /// <summary>
         /// Gets the operation where the constraint violation occurred.
         /// </summary>
-        public string? Operation { get; }
+        public string Operation { get; }
     }
 }

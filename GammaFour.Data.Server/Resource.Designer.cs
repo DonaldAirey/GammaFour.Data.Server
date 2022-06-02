@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GammaFour.Data {
+namespace GammaFour.Data.Server {
     using System;
     
     

@@ -2,7 +2,7 @@
 //    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
-namespace GammaFour.Data
+namespace GammaFour.Data.Server
 {
     using System;
     using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace GammaFour.Data
         /// <summary>
         /// Implicit cancellation token source for when non is supplied by the caller.
         /// </summary>
-        private readonly CancellationTokenSource? cancellationTokenSource;
+        private readonly CancellationTokenSource cancellationTokenSource;
 
         /// <summary>
         /// The transaction.

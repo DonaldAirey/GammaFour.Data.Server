@@ -1,8 +1,8 @@
-﻿// <copyright file="UniqueKeyIndex{T}.cs" company="Donald Roy Airey">
+﻿// <copyright file="UniqueIndex.cs" company="Donald Roy Airey">
 //    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
-namespace GammaFour.Data
+namespace GammaFour.Data.Server
 {
     using System;
     using System.Collections.Generic;
@@ -15,9 +15,7 @@ namespace GammaFour.Data
     /// <summary>
     /// A unique index.
     /// </summary>
-    /// <typeparam name="T">The value.</typeparam>
-    public class UniqueKeyIndex<T> : IEnlistmentNotification, ILockable
-        where T : IVersionable<T>
+    public class UniqueIndex : IUniqueIndex
     {
         /// <summary>
         /// Gets a lock used to synchronize multithreaded access.
@@ -25,9 +23,9 @@ namespace GammaFour.Data
         private readonly AsyncReaderWriterLock asyncReaderWriterLock = new ();
 
         /// <summary>
-        /// The dictionary mapping the keys to the values.
+        /// The dictionary mapping the keys to the rows.
         /// </summary>
-        private readonly Dictionary<object, T> dictionary = new ();
+        private readonly Dictionary<object, IRow> dictionary = new Dictionary<object, IRow>();
 
         /// <summary>
         /// The actions for undoing a transaction.
@@ -35,20 +33,20 @@ namespace GammaFour.Data
         private readonly Stack<Action> undoStack = new ();
 
         /// <summary>
-        /// Used to filter items that appear in the index.
+        /// Gets or sets a function used to filter items that should not appear in the index.
         /// </summary>
-        private Func<T, bool> filterFunction = t => true;
+        private Func<IRow, bool> filterFunction = t => true;
 
         /// <summary>
-        /// Used to get the primary key from the record.
+        /// Gets or sets the function used to get the primary key from the record.
         /// </summary>
-        private Func<T, object> keyFunction = t => throw new NotImplementedException();
+        private Func<IRow, object> keyFunction = t => throw new NotImplementedException();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UniqueKeyIndex{TType}"/> class.
+        /// Initializes a new instance of the <see cref="UniqueIndex"/> class.
         /// </summary>
         /// <param name="name">The name of the index.</param>
-        public UniqueKeyIndex(string name)
+        public UniqueIndex(string name)
         {
             // Initialize the object.
             this.Name = name;
@@ -57,30 +55,28 @@ namespace GammaFour.Data
         /// <summary>
         /// Gets or sets the handler for when the index is changed.
         /// </summary>
-        public EventHandler<RecordChangeEventArgs<object>>? IndexChangedHandler { get; set; }
+        public EventHandler<RecordChangeEventArgs<IRow>> IndexChangedHandler { get; set; }
 
-        /// <summary>
-        /// Gets the name of the index.
-        /// </summary>
+        /// <inheritdoc/>
         public string Name { get; }
 
-        /// <summary>
-        /// Adds a key to the index.
-        /// </summary>
-        /// <param name="value">The referenced record.</param>
-        public void Add(T value)
+        /// <inheritdoc/>
+        public ITable Table { get; set; }
+
+        /// <inheritdoc/>
+        public void Add(IRow row)
         {
-            // For those values that qualify as keys, extract the key from the record and add it to the dictionary while making sure we can undo the
+            // For those rows that qualify as keys, extract the key from the record and add it to the dictionary while making sure we can undo the
             // action.
-            if (this.filterFunction(value))
+            if (this.Filter(row))
             {
-                object key = this.keyFunction(value);
-                this.dictionary.Add(key, value);
+                object key = this.GetKey(row);
+                this.dictionary.Add(key, row);
                 this.undoStack.Push(() => this.dictionary.Remove(key));
 
-                // This is used to notify a foreign key that this value has changed.  The parent will have the opportunity to reject the change if it
+                // This is used to notify a foreign key that this row has changed.  The parent will have the opportunity to reject the change if it
                 // violates referential integrity.
-                this.OnIndexChanging(DataAction.Add, key, null);
+                this.OnIndexChanging(DataAction.Add, null, row);
             }
         }
 
@@ -94,36 +90,31 @@ namespace GammaFour.Data
             enlistment.Done();
         }
 
-        /// <summary>
-        /// Gets a value that indicates if the index contains the given key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns>True if the index contains the given key, false otherwise.</returns>
+        /// <inheritdoc/>
         public bool ContainsKey(object key)
         {
             // Determine if the index holds the given key.
             return this.dictionary.ContainsKey(key);
         }
 
-        /// <summary>
-        /// Finds the value indexed by the given key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns>The record indexed by the given key, or null if it doesn't exist.</returns>
-        public T? Find(object key)
+        /// <inheritdoc/>
+        public virtual bool Filter(IRow row)
         {
-            // Return the value from the dictionary, or null if it doesn't exist.
-            return this.dictionary.TryGetValue(key, out T? value) ? value : default;
+            // This will typically be a test for null.
+            return this.filterFunction(row);
         }
 
-        /// <summary>
-        /// Gets the key of the given record.
-        /// </summary>
-        /// <param name="value">The record.</param>
-        /// <returns>The key values.</returns>
-        public object GetKey(T value)
+        /// <inheritdoc/>
+        public IRow Find(object key)
         {
-            return this.keyFunction(value);
+            // Return the row from the dictionary, or null if it doesn't exist.
+            return this.dictionary.TryGetValue(key, out IRow row) ? row : default;
+        }
+
+        /// <inheritdoc/>
+        public virtual object GetKey(IRow row)
+        {
+            return this.keyFunction(row);
         }
 
         /// <summary>
@@ -131,7 +122,7 @@ namespace GammaFour.Data
         /// </summary>
         /// <param name="filter">Used to filter items that appear in the index.</param>
         /// <returns>A reference to this object for Fluent construction.</returns>
-        public UniqueKeyIndex<T> HasFilter(Expression<Func<T, bool>> filter)
+        public IUniqueIndex HasFilter(Expression<Func<IRow, bool>> filter)
         {
             this.filterFunction = filter.Compile();
             return this;
@@ -142,7 +133,7 @@ namespace GammaFour.Data
         /// </summary>
         /// <param name="key">Used to extract the key from the record.</param>
         /// <returns>A reference to this object for Fluent construction.</returns>
-        public UniqueKeyIndex<T> HasIndex(Expression<Func<T, object>> key)
+        public IUniqueIndex HasIndex(Expression<Func<IRow, object>> key)
         {
             this.keyFunction = key.Compile();
             return this;
@@ -178,21 +169,18 @@ namespace GammaFour.Data
             this.asyncReaderWriterLock.Release();
         }
 
-        /// <summary>
-        /// Removes a key from the index.
-        /// </summary>
-        /// <param name="value">The record to be removed.</param>
-        public void Remove(T value)
+        /// <inheritdoc/>
+        public void Remove(IRow row)
         {
             // Make sure the key was properly removed before we push an undo operation on the stack.  Removing an item that isn't part of the index
             // is not considered an exception.
-            if (this.filterFunction(value))
+            if (this.Filter(row))
             {
-                object key = this.keyFunction(value);
+                object key = this.GetKey(row);
                 if (this.dictionary.Remove(key))
                 {
-                    this.undoStack.Push(() => this.dictionary.Add(key, value));
-                    this.OnIndexChanging(DataAction.Delete, null, key);
+                    this.undoStack.Push(() => this.dictionary.Add(key, row));
+                    this.OnIndexChanging(DataAction.Delete, row, null);
                 }
             }
         }
@@ -207,38 +195,36 @@ namespace GammaFour.Data
             }
         }
 
-        /// <summary>
-        /// Updates the key of a record in the index.
-        /// </summary>
-        /// <param name="value">The record that has changed.</param>
-        public void Update(T value)
+        /// <inheritdoc/>
+        public void Update(IRow row)
         {
-            T previousValue = value.GetVersion(RecordVersion.Previous);
-            object previousKey = this.keyFunction(previousValue);
-            object currentKey = this.keyFunction(value);
+            // Get the previous version of this record.
+            IRow previousRow = row.GetVersion(RecordVersion.Previous);
+            object previousKey = this.GetKey(previousRow);
+            object currentKey = this.GetKey(row);
 
-            // Update should only perform work when the values are different.
+            // Update should only perform work when the rows are different.
             if (!object.Equals(previousKey, currentKey))
             {
                 // Make sure the key was properly removed before we push an undo operation on the stack.  Removing an item that isn't part of the
                 // index is not considered an exception.
-                if (this.filterFunction(previousValue))
+                if (this.Filter(previousRow))
                 {
                     if (this.dictionary.Remove(previousKey))
                     {
-                        this.undoStack.Push(() => this.dictionary.Add(previousKey, value));
+                        this.undoStack.Push(() => this.dictionary.Add(previousKey, row));
                     }
                 }
 
-                // Extract the new key from the value and add it to the dictionary making sure we can undo the action.
-                if (this.filterFunction(value))
+                // Extract the new key from the row and add it to the dictionary making sure we can undo the action.
+                if (this.Filter(row))
                 {
-                    this.dictionary.Add(currentKey, value);
+                    this.dictionary.Add(currentKey, row);
                     this.undoStack.Push(() => this.dictionary.Remove(currentKey));
                 }
 
                 // Notify when the index has changed.
-                this.OnIndexChanging(DataAction.Update, previousKey, currentKey);
+                this.OnIndexChanging(DataAction.Update, previousRow, row);
             }
         }
 
@@ -257,14 +243,14 @@ namespace GammaFour.Data
         }
 
         /// <summary>
-        /// Handles the changing of the index.
+        /// Handles the changing of the key values.
         /// </summary>
         /// <param name="dataAction">The action performed (Add, Update, Delete).</param>
-        /// <param name="previous">The previous value of the key.</param>
-        /// <param name="current">The current value of the key.</param>
-        private void OnIndexChanging(DataAction dataAction, object? previous, object? current)
+        /// <param name="previousRow">The previous version of the row.</param>
+        /// <param name="currentRow">The current version of the row.</param>
+        private void OnIndexChanging(DataAction dataAction, IRow previousRow, IRow currentRow)
         {
-            this.IndexChangedHandler?.Invoke(this, new RecordChangeEventArgs<object>(dataAction, previous, current));
+            this.IndexChangedHandler?.Invoke(this, new RecordChangeEventArgs<IRow>(dataAction, previousRow, currentRow));
         }
     }
 }
