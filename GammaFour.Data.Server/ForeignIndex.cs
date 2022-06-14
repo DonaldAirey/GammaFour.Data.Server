@@ -58,6 +58,12 @@ namespace GammaFour.Data.Server
         }
 
         /// <inheritdoc/>
+        public bool IsReadLockHeld => this.asyncReaderWriterLock.IsReadLockHeld;
+
+        /// <inheritdoc/>
+        public bool IsWriteLockHeld => this.asyncReaderWriterLock.IsWriteLockHeld;
+
+        /// <inheritdoc/>
         public string Name { get; }
 
         /// <inheritdoc/>

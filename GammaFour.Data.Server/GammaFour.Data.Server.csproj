@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>3.1.0</Version>
+    <Version>3.1.1</Version>
     <Description>Support package for Gamma Four Data Model Generator output.</Description>
     <Copyright>Copyright (C) 2022 - Donald Airey - All rights reserved.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

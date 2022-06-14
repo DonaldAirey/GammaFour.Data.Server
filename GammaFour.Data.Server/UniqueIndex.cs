@@ -58,6 +58,12 @@ namespace GammaFour.Data.Server
         public EventHandler<RecordChangeEventArgs<IRow>> IndexChangedHandler { get; set; }
 
         /// <inheritdoc/>
+        public bool IsReadLockHeld => this.asyncReaderWriterLock.IsReadLockHeld;
+
+        /// <inheritdoc/>
+        public bool IsWriteLockHeld => this.asyncReaderWriterLock.IsWriteLockHeld;
+
+        /// <inheritdoc/>
         public string Name { get; }
 
         /// <inheritdoc/>

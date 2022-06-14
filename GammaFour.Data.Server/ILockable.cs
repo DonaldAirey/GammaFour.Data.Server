@@ -13,6 +13,16 @@ namespace GammaFour.Data.Server
     public interface ILockable
     {
         /// <summary>
+        /// Gets a value indicating whether the read lock is taken.
+        /// </summary>
+        bool IsReadLockHeld { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the write lock is taken.
+        /// </summary>
+        bool IsWriteLockHeld { get; }
+
+        /// <summary>
         /// Release the lock.
         /// </summary>
         void Release();
