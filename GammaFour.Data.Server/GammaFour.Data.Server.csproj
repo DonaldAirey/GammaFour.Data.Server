@@ -1,14 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>3.1.1</Version>
+    <Authors>Donald Airey</Authors>
+    <Company>Donald Airey</Company>
+    <Configurations>Development;Production</Configurations>
+    <Copyright>Copyright (C) 2024 - Donald Airey - All rights reserved.</Copyright>
     <Description>Support package for Gamma Four Data Model Generator output.</Description>
-    <Copyright>Copyright (C) 2022 - Donald Airey - All rights reserved.</Copyright>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageIcon>Package.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageOutputPath>C:\NuGet Packages</PackageOutputPath>
     <PackageProjectUrl>https://github.com/DonaldAirey/GammaFour.Data.Server</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageVersion>3.1.2</PackageVersion>
+    <Product>ThetaRex.Common</Product>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/Theta-Rex/ThetaRex.Common</RepositoryUrl>
+    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <Title>Theta Rex Common</Title>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|AnyCPU'">
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,8 +39,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNext.Threading" Version="4.5.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
+    <EmbeddedResource Include="Assets\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Package.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNext.Threading" Version="5.2.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -32,18 +69,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resource.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Resource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <None Update="Assets\Package.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="Assets\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,6 @@ namespace GammaFour.Data.Server
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
 
     /// <summary>
     /// A foreign index.
@@ -77,22 +76,22 @@ namespace GammaFour.Data.Server
         /// <summary>
         /// Specifies the key for organizing the collection.
         /// </summary>
-        /// <param name="filter">Used to filter items that appear in the index.</param>
+        /// <param name="filterFunction">Used to filter items that appear in the index.</param>
         /// <returns>A reference to this object for Fluent construction.</returns>
-        public ForeignIndex<TParent, TChild> HasFilter(Expression<Func<TChild, bool>> filter)
+        public ForeignIndex<TParent, TChild> HasFilter(Func<TChild, bool> filterFunction)
         {
-            this.filterFunction = filter.Compile();
+            this.filterFunction = filterFunction;
             return this;
         }
 
         /// <summary>
         /// Specifies the key for organizing the collection.
         /// </summary>
-        /// <param name="key">Used to extract the key from the record.</param>
+        /// <param name="keyFunction">Used to extract the key from the record.</param>
         /// <returns>A reference to this object for Fluent construction.</returns>
-        public ForeignIndex<TParent, TChild> HasIndex(Expression<Func<TChild, object>> key)
+        public ForeignIndex<TParent, TChild> HasIndex(Func<TChild, object> keyFunction)
         {
-            this.keyFunction = key.Compile();
+            this.keyFunction = keyFunction;
             return this;
         }
     }

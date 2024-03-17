@@ -6,7 +6,6 @@ namespace GammaFour.Data.Server
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Transactions;
@@ -126,22 +125,22 @@ namespace GammaFour.Data.Server
         /// <summary>
         /// Specifies the key for organizing the collection.
         /// </summary>
-        /// <param name="filter">Used to filter items that appear in the index.</param>
+        /// <param name="filterFunction">Used to filter items that appear in the index.</param>
         /// <returns>A reference to this object for Fluent construction.</returns>
-        public IUniqueIndex HasFilter(Expression<Func<IRow, bool>> filter)
+        public IUniqueIndex HasFilter(Func<IRow, bool> filterFunction)
         {
-            this.filterFunction = filter.Compile();
+            this.filterFunction = filterFunction;
             return this;
         }
 
         /// <summary>
         /// Specifies the key for organizing the collection.
         /// </summary>
-        /// <param name="key">Used to extract the key from the record.</param>
+        /// <param name="keyFunction">Used to extract the key from the record.</param>
         /// <returns>A reference to this object for Fluent construction.</returns>
-        public IUniqueIndex HasIndex(Expression<Func<IRow, object>> key)
+        public IUniqueIndex HasIndex(Func<IRow, object> keyFunction)
         {
-            this.keyFunction = key.Compile();
+            this.keyFunction = keyFunction;
             return this;
         }
 

@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -7,14 +6,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GammaFour.Data.Server", "Ga
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Development|Any CPU = Development|Any CPU
+		Production|Any CPU = Production|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D0090011-E9DB-4104-854C-3735F3A834E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D0090011-E9DB-4104-854C-3735F3A834E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D0090011-E9DB-4104-854C-3735F3A834E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D0090011-E9DB-4104-854C-3735F3A834E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0090011-E9DB-4104-854C-3735F3A834E0}.Development|Any CPU.ActiveCfg = Development|Any CPU
+		{D0090011-E9DB-4104-854C-3735F3A834E0}.Development|Any CPU.Build.0 = Development|Any CPU
+		{D0090011-E9DB-4104-854C-3735F3A834E0}.Production|Any CPU.ActiveCfg = Production|Any CPU
+		{D0090011-E9DB-4104-854C-3735F3A834E0}.Production|Any CPU.Build.0 = Production|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
