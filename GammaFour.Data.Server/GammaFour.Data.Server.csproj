@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyVersion>3.1.5</AssemblyVersion>
     <Authors>Donald Airey</Authors>
     <Company>Donald Airey</Company>
     <Configurations>Development;Production</Configurations>
@@ -9,12 +10,12 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <InvariantGlobalization>true</InvariantGlobalization>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageIcon>Package.png</PackageIcon>
+    <PackageIcon>Gamma Four.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageOutputPath>C:\NuGet Packages</PackageOutputPath>
     <PackageProjectUrl>https://github.com/DonaldAirey/GammaFour.Data.Server</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageVersion>3.1.2</PackageVersion>
+    <PackageVersion>3.1.5</PackageVersion>
     <Product>ThetaRex.Common</Product>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Theta-Rex/ThetaRex.Common</RepositoryUrl>
@@ -31,6 +32,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Gamma Four.png" />
     <None Remove="stylecop.json" />
   </ItemGroup>
 
@@ -39,11 +41,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Assets\README.md">
+    <EmbeddedResource Include="Assets\Gamma Four.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Package.png">
+    <EmbeddedResource Include="Assets\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </EmbeddedResource>
@@ -69,10 +71,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Assets\Package.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
     <None Update="Assets\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
