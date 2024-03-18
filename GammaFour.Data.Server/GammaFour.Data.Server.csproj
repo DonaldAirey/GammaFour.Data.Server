@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyVersion>3.1.5</AssemblyVersion>
+    <AssemblyVersion>3.1.6</AssemblyVersion>
     <Authors>Donald Airey</Authors>
     <Company>Donald Airey</Company>
     <Configurations>Development;Production</Configurations>
@@ -15,7 +15,7 @@
     <PackageOutputPath>C:\NuGet Packages</PackageOutputPath>
     <PackageProjectUrl>https://github.com/DonaldAirey/GammaFour.Data.Server</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageVersion>3.1.5</PackageVersion>
+    <PackageVersion>3.1.6</PackageVersion>
     <Product>ThetaRex.Common</Product>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Theta-Rex/ThetaRex.Common</RepositoryUrl>
@@ -23,6 +23,11 @@
     <TargetFrameworks>net8.0</TargetFrameworks>
     <Title>Theta Rex Common</Title>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|AnyCPU'">
+    <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+    <DisableXbfLineInfo>False</DisableXbfLineInfo>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|AnyCPU'">
