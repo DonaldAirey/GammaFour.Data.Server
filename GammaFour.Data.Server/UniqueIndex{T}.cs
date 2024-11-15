@@ -10,7 +10,9 @@ namespace GammaFour.Data.Server
     /// A unique index.
     /// </summary>
     /// <typeparam name="T">The type of IRow managed by the index.</typeparam>
-    public class UniqueIndex<T> : UniqueIndex
+    /// <param name="name">The name of the index.</param>
+    public class UniqueIndex<T>(string name)
+        : UniqueIndex(name)
         where T : class, IRow
     {
         /// <summary>
@@ -22,15 +24,6 @@ namespace GammaFour.Data.Server
         /// Gets or sets the function used to get the primary key from the record.
         /// </summary>
         private Func<T, object> keyFunction = t => throw new NotImplementedException();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UniqueIndex{T}"/> class.
-        /// </summary>
-        /// <param name="name">The name of the index.</param>
-        public UniqueIndex(string name)
-            : base(name)
-        {
-        }
 
         /// <inheritdoc/>
         public override bool Filter(IRow row)
