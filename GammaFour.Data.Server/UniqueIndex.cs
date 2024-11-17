@@ -14,12 +14,14 @@ namespace GammaFour.Data.Server
     /// <summary>
     /// A unique index.
     /// </summary>
-    public class UniqueIndex : IUniqueIndex
+    /// <param name="name">The name of the index.</param>
+    public class UniqueIndex(string name)
+        : IUniqueIndex
     {
         /// <summary>
         /// Gets a lock used to synchronize multithreaded access.
         /// </summary>
-        private readonly AsyncReaderWriterLock asyncReaderWriterLock = new ();
+        private readonly AsyncReaderWriterLock asyncReaderWriterLock = new AsyncReaderWriterLock();
 
         /// <summary>
         /// The dictionary mapping the keys to the rows.
@@ -29,7 +31,7 @@ namespace GammaFour.Data.Server
         /// <summary>
         /// The actions for undoing a transaction.
         /// </summary>
-        private readonly Stack<Action> undoStack = new ();
+        private readonly Stack<Action> undoStack = new Stack<Action>();
 
         /// <summary>
         /// Gets or sets a function used to filter items that should not appear in the index.
@@ -42,19 +44,9 @@ namespace GammaFour.Data.Server
         private Func<IRow, object> keyFunction = t => throw new NotImplementedException();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UniqueIndex"/> class.
-        /// </summary>
-        /// <param name="name">The name of the index.</param>
-        public UniqueIndex(string name)
-        {
-            // Initialize the object.
-            this.Name = name;
-        }
-
-        /// <summary>
         /// Gets or sets the handler for when the index is changed.
         /// </summary>
-        public EventHandler<RecordChangeEventArgs<IRow>> IndexChangedHandler { get; set; }
+        public EventHandler<RecordChangeEventArgs<IRow>>? IndexChangedHandler { get; set; }
 
         /// <inheritdoc/>
         public bool IsReadLockHeld => this.asyncReaderWriterLock.IsReadLockHeld;
@@ -63,10 +55,10 @@ namespace GammaFour.Data.Server
         public bool IsWriteLockHeld => this.asyncReaderWriterLock.IsWriteLockHeld;
 
         /// <inheritdoc/>
-        public string Name { get; }
+        public string Name { get; } = name;
 
         /// <inheritdoc/>
-        public ITable Table { get; set; }
+        public ITable? Table { get; set; } = null;
 
         /// <inheritdoc/>
         public void Add(IRow row)
@@ -110,10 +102,10 @@ namespace GammaFour.Data.Server
         }
 
         /// <inheritdoc/>
-        public IRow Find(object key)
+        public IRow? Find(object key)
         {
             // Return the row from the dictionary, or null if it doesn't exist.
-            return this.dictionary.TryGetValue(key, out IRow row) ? row : default;
+            return this.dictionary.TryGetValue(key, out IRow? row) ? row : default;
         }
 
         /// <inheritdoc/>
@@ -253,7 +245,7 @@ namespace GammaFour.Data.Server
         /// <param name="dataAction">The action performed (Add, Update, Delete).</param>
         /// <param name="previousRow">The previous version of the row.</param>
         /// <param name="currentRow">The current version of the row.</param>
-        private void OnIndexChanging(DataAction dataAction, IRow previousRow, IRow currentRow)
+        private void OnIndexChanging(DataAction dataAction, IRow? previousRow, IRow? currentRow)
         {
             this.IndexChangedHandler?.Invoke(this, new RecordChangeEventArgs<IRow>(dataAction, previousRow, currentRow));
         }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyVersion>9.0.0</AssemblyVersion>
+    <AssemblyVersion>9.0.1</AssemblyVersion>
     <Authors>Donald Airey</Authors>
     <Company>Donald Airey</Company>
     <Configurations>Development;Production</Configurations>
@@ -12,12 +12,13 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <InvariantGlobalization>true</InvariantGlobalization>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <Nullable>enable</Nullable>
     <PackageIcon>Gamma Four.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageOutputPath>C:\NuGet Packages</PackageOutputPath>
     <PackageProjectUrl>https://github.com/DonaldAirey/GammaFour.Data.Server</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageVersion>9.0.0</PackageVersion>
+    <PackageVersion>9.0.1</PackageVersion>
     <Product>ThetaRex.Common</Product>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Theta-Rex/ThetaRex.Common</RepositoryUrl>

@@ -6,6 +6,7 @@ namespace GammaFour.Data.Server
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Transactions;
@@ -87,7 +88,7 @@ namespace GammaFour.Data.Server
                 }
 
                 // Find or create a bucket of child records for the new key.
-                if (!this.dictionary.TryGetValue(key, out HashSet<IRow> hashSet))
+                if (!this.dictionary.TryGetValue(key, out HashSet<IRow>? hashSet))
                 {
                     hashSet = new HashSet<IRow>();
                     this.dictionary.Add(key, hashSet);
@@ -139,7 +140,16 @@ namespace GammaFour.Data.Server
         public IEnumerable<IRow> GetChildren(IRow parent)
         {
             // Return the list of children for the given parent record, or an empty list if there are no children.
-            return this.dictionary.TryGetValue(this.UniqueIndex.GetKey(parent), out HashSet<IRow> rows) ? rows : (IEnumerable<IRow>)new List<IRow>();
+            var key = this.UniqueIndex.GetKey(parent);
+            if (key != null)
+            {
+                if (this.dictionary.TryGetValue(key, out HashSet<IRow>? rows))
+                {
+                    return rows;
+                }
+            }
+
+            return Enumerable.Empty<IRow>();
         }
 
         /// <inheritdoc/>
@@ -149,14 +159,14 @@ namespace GammaFour.Data.Server
         }
 
         /// <summary>
-        /// Gets the parent recordd of the given child.
+        /// Gets the parent record of the given child.
         /// </summary>
         /// <param name="child">The child record.</param>
         /// <returns>The parent record of the given child.</returns>
-        public IRow GetParent(IRow child)
+        public IRow? GetParent(IRow child)
         {
             // Find the parent record.
-            return this.Filter(child) ? this.UniqueIndex.Find(this.GetKey(child)) : default;
+            return this.Filter(child) ? this.UniqueIndex.Find(this.GetKey(child)) : null;
         }
 
         /// <summary>
@@ -245,7 +255,7 @@ namespace GammaFour.Data.Server
                 object key = this.GetKey(row);
 
                 // Find the set of child records belonging to the given parent that has the key extracted from the child.
-                if (this.dictionary.TryGetValue(key, out HashSet<IRow> hashSet))
+                if (this.dictionary.TryGetValue(key, out HashSet<IRow>? hashSet))
                 {
                     // Remove the existing child record from the hash and remove the hash if it's empty.
                     hashSet.Remove(row);
@@ -258,7 +268,7 @@ namespace GammaFour.Data.Server
                     this.undoStack.Push(() =>
                     {
                         // Make sure there's a bucket for the restored record.
-                        if (!this.dictionary.TryGetValue(key, out HashSet<IRow> undoHashSet))
+                        if (!this.dictionary.TryGetValue(key, out HashSet<IRow>? undoHashSet))
                         {
                             undoHashSet = new HashSet<IRow>();
                             this.dictionary.Add(key, undoHashSet);
@@ -304,14 +314,14 @@ namespace GammaFour.Data.Server
                     // This allows us to back out of the operation.
                     this.undoStack.Push(() =>
                     {
-                            // Make sure there's a bucket for the restored record.
-                        if (!this.dictionary.TryGetValue(previousKey, out HashSet<IRow> undoHashSet))
+                        // Make sure there's a bucket for the restored record.
+                        if (!this.dictionary.TryGetValue(previousKey, out HashSet<IRow>? undoHashSet))
                         {
                             undoHashSet = new HashSet<IRow>();
                             this.dictionary.Add(previousKey, undoHashSet);
                         }
 
-                            // This will place the restored record back in the hashtable.
+                        // This will place the restored record back in the hashtable.
                         undoHashSet.Add(row);
                     });
                 }
@@ -344,7 +354,7 @@ namespace GammaFour.Data.Server
                     // This allows us to back out of the operation.
                     this.undoStack.Push(() =>
                     {
-                            // Remove the new child from the index.
+                        // Remove the new child from the index.
                         HashSet<IRow> undoHashSet = this.dictionary[newKey];
                         undoHashSet.Remove(row);
                         if (undoHashSet.Count == 0)
@@ -375,7 +385,7 @@ namespace GammaFour.Data.Server
         /// </summary>
         /// <param name="sender">The originator of the event.</param>
         /// <param name="recordChangeEventArgs">The event arguments.</param>
-        private void HandleUniqueIndexChange(object sender, RecordChangeEventArgs<IRow> recordChangeEventArgs)
+        private void HandleUniqueIndexChange(object? sender, RecordChangeEventArgs<IRow> recordChangeEventArgs)
         {
             // When deleting a parent record, or updating a parent record, enforce the constraint that the child records cannot be orphaned.
             if ((recordChangeEventArgs.DataAction == DataAction.Delete || recordChangeEventArgs.DataAction == DataAction.Update)

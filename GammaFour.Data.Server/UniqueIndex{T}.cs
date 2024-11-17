@@ -28,8 +28,12 @@ namespace GammaFour.Data.Server
         /// <inheritdoc/>
         public override bool Filter(IRow row)
         {
+            // Validate the arguments.
+            var typedRow = row as T;
+            ArgumentNullException.ThrowIfNull(typedRow);
+
             // This will typically be a test for null.
-            return this.filterFunction(row as T);
+            return this.filterFunction(typedRow);
         }
 
         /// <summary>
@@ -39,14 +43,23 @@ namespace GammaFour.Data.Server
         /// <returns>The record indexed by the given key, or null if it doesn't exist.</returns>
         public new T Find(object key)
         {
+            // Validate the arguments.
+            var typedKey = base.Find(key) as T;
+            ArgumentNullException.ThrowIfNull(typedKey);
+
             // Return the row from the dictionary, or null if it doesn't exist.
-            return base.Find(key) as T;
+            return typedKey;
         }
 
         /// <inheritdoc/>
         public override object GetKey(IRow row)
         {
-            return this.keyFunction(row as T);
+            // Validate the arguments.
+            var typedRow = row as T;
+            ArgumentNullException.ThrowIfNull(typedRow);
+
+            // Return the key function for the given row.
+            return this.keyFunction(typedRow);
         }
 
         /// <summary>

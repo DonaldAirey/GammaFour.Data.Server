@@ -19,7 +19,7 @@ namespace GammaFour.Data.Server
         /// <summary>
         /// Implicit cancellation token source for when non is supplied by the caller.
         /// </summary>
-        private readonly CancellationTokenSource cancellationTokenSource;
+        private readonly CancellationTokenSource? cancellationTokenSource;
 
         /// <summary>
         /// The transaction.
@@ -34,12 +34,12 @@ namespace GammaFour.Data.Server
         /// <summary>
         /// Collection of reader locks for the resources used by the transactional code block.
         /// </summary>
-        private readonly HashSet<ILockable> readerLocks = new ();
+        private readonly HashSet<ILockable> readerLocks = new HashSet<ILockable>();
 
         /// <summary>
         /// Collection of writer locks for the resources used by the transactional code block.
         /// </summary>
-        private readonly HashSet<ILockable> writerLocks = new ();
+        private readonly HashSet<ILockable> writerLocks = new HashSet<ILockable>();
 
         /// <summary>
         /// A cancellation token provided by the caller.
@@ -164,10 +164,7 @@ namespace GammaFour.Data.Server
         {
             // This finalizes the transaction.
             this.transactionScope.Dispose();
-            if (this.cancellationTokenSource != null)
-            {
-                this.cancellationTokenSource.Dispose();
-            }
+            this.cancellationTokenSource?.Dispose();
 
             // Release all the locks as the last action of this transaction.
             this.readerLocks.ToList().ForEach(l => l.Release());

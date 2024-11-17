@@ -54,7 +54,7 @@ namespace GammaFour.Data.Server
         /// </summary>
         /// <param name="child">The child row.</param>
         /// <returns>The parent row of the given child.</returns>
-        IRow GetParent(IRow child);
+        IRow? GetParent(IRow child);
 
         /// <summary>
         /// Gets an indication of whether the child row has a parent.

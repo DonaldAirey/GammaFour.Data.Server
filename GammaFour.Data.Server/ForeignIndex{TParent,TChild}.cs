@@ -13,7 +13,10 @@ namespace GammaFour.Data.Server
     /// </summary>
     /// <typeparam name="TParent">The parent type.</typeparam>
     /// <typeparam name="TChild">The child type.</typeparam>
-    public class ForeignIndex<TParent, TChild> : ForeignIndex
+    /// <param name="name">The name of the index.</param>
+    /// <param name="parentIndex">The parent index.</param>
+    public class ForeignIndex<TParent, TChild>(string name, IUniqueIndex parentIndex)
+        : ForeignIndex(name, parentIndex)
         where TParent : class
         where TChild : class
     {
@@ -27,21 +30,16 @@ namespace GammaFour.Data.Server
         /// </summary>
         private Func<TChild, object> keyFunction = t => throw new NotImplementedException();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ForeignIndex{TParent, TChild}"/> class.
-        /// </summary>
-        /// <param name="name">The name of the index.</param>
-        /// <param name="parentIndex">The parent index.</param>
-        public ForeignIndex(string name, IUniqueIndex parentIndex)
-            : base(name, parentIndex)
-        {
-        }
-
         /// <inheritdoc/>
         public override bool Filter(IRow row)
         {
+            // Validate the arguments.
+            ArgumentNullException.ThrowIfNull(row);
+            var child = row as TChild;
+            ArgumentNullException.ThrowIfNull(child);
+
             // This will typically be a test for null.
-            return this.filterFunction(row as TChild);
+            return this.filterFunction(child);
         }
 
         /// <summary>
@@ -58,8 +56,13 @@ namespace GammaFour.Data.Server
         /// <inheritdoc/>
         public override object GetKey(IRow row)
         {
+            // Validate the arguments.
+            ArgumentNullException.ThrowIfNull(row);
+            var child = row as TChild;
+            ArgumentNullException.ThrowIfNull(child);
+
             // Extract the key from the row.
-            return this.keyFunction(row as TChild);
+            return this.keyFunction(child);
         }
 
         /// <summary>
@@ -69,8 +72,13 @@ namespace GammaFour.Data.Server
         /// <returns>The parent record of the given child.</returns>
         public new TParent GetParent(IRow child)
         {
-            // Find the parent record.
-            return base.GetParent(child) as TParent;
+            // Validate the arguments.
+            ArgumentNullException.ThrowIfNull(child);
+            var parent = base.GetParent(child) as TParent;
+            ArgumentNullException.ThrowIfNull(parent);
+
+            // Return the parent.
+            return parent;
         }
 
         /// <summary>

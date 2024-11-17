@@ -15,7 +15,7 @@ namespace GammaFour.Data.Server
         /// <summary>
         /// Gets or sets the handler for when the index is changed.
         /// </summary>
-        EventHandler<RecordChangeEventArgs<IRow>> IndexChangedHandler { get; set; }
+        EventHandler<RecordChangeEventArgs<IRow>>? IndexChangedHandler { get; set; }
 
         /// <summary>
         /// Gets the name of the index.
@@ -25,7 +25,7 @@ namespace GammaFour.Data.Server
         /// <summary>
         /// Gets or sets the table to which this index belongs.
         /// </summary>
-        ITable Table { get; set; }
+        ITable? Table { get; set; }
 
         /// <summary>
         /// Adds a key to the index.
@@ -52,14 +52,14 @@ namespace GammaFour.Data.Server
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>The record indexed by the given key, or null if it doesn't exist.</returns>
-        IRow Find(object key);
+        IRow? Find(object key);
 
         /// <summary>
         /// Gets the key of the given record.
         /// </summary>
         /// <param name="row">The record.</param>
         /// <returns>The key rows.</returns>
-        object GetKey(IRow row);
+        object? GetKey(IRow row);
 
         /// <summary>
         /// Removes a key from the index.
