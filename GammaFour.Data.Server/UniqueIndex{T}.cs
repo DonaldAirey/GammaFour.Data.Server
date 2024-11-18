@@ -41,14 +41,10 @@ namespace GammaFour.Data.Server
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>The record indexed by the given key, or null if it doesn't exist.</returns>
-        public new T Find(object key)
+        public new T? Find(object key)
         {
-            // Validate the arguments.
-            var typedKey = base.Find(key) as T;
-            ArgumentNullException.ThrowIfNull(typedKey);
-
-            // Return the row from the dictionary, or null if it doesn't exist.
-            return typedKey;
+            // Find the item based on the key.
+            return base.Find(key) as T;
         }
 
         /// <inheritdoc/>
