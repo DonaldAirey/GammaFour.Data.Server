@@ -70,15 +70,13 @@ namespace GammaFour.Data.Server
         /// </summary>
         /// <param name="child">The child record.</param>
         /// <returns>The parent record of the given child.</returns>
-        public new TParent GetParent(IRow child)
+        public new TParent? GetParent(IRow child)
         {
             // Validate the arguments.
             ArgumentNullException.ThrowIfNull(child);
-            var parent = base.GetParent(child) as TParent;
-            ArgumentNullException.ThrowIfNull(parent);
 
             // Return the parent.
-            return parent;
+            return base.GetParent(child) as TParent;
         }
 
         /// <summary>
