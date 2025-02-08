@@ -1,5 +1,5 @@
 ﻿// <copyright file="IForeignIndex.cs" company="Donald Roy Airey">
-//    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
+//    Copyright © 2025 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data.Server
@@ -10,7 +10,7 @@ namespace GammaFour.Data.Server
     /// <summary>
     /// A foreign index.
     /// </summary>
-    public interface IForeignIndex : ILockable, IEnlistmentNotification
+    public interface IForeignIndex : IEnlistmentNotification
     {
         /// <summary>
         /// Gets the name of the index.

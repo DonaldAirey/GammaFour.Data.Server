@@ -1,5 +1,5 @@
 ﻿// <copyright file="IUniqueIndex.cs" company="Donald Roy Airey">
-//    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
+//    Copyright © 2025 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data.Server
@@ -10,7 +10,7 @@ namespace GammaFour.Data.Server
     /// <summary>
     /// An interface for a unique index.
     /// </summary>
-    public interface IUniqueIndex : IEnlistmentNotification, ILockable
+    public interface IUniqueIndex : IEnlistmentNotification
     {
         /// <summary>
         /// Gets or sets the handler for when the index is changed.
@@ -25,7 +25,7 @@ namespace GammaFour.Data.Server
         /// <summary>
         /// Gets or sets the table to which this index belongs.
         /// </summary>
-        ITable? Table { get; set; }
+        ITable Table { get; set; }
 
         /// <summary>
         /// Adds a key to the index.

@@ -1,5 +1,5 @@
 // <copyright file="ITable.cs" company="Donald Roy Airey">
-//    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
+//    Copyright © 2025 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data.Server
@@ -11,7 +11,7 @@ namespace GammaFour.Data.Server
     /// <summary>
     /// Used by a template selector to connect a view model to the template used to display it.
     /// </summary>
-    public interface ITable : IEnumerable, ILockable, IEnlistmentNotification
+    public interface ITable : IEnumerable, IEnlistmentNotification
     {
         /// <summary>
         /// Gets the name of the index.

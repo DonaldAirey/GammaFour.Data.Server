@@ -1,5 +1,5 @@
 ﻿// <copyright file="ForeignIndex.cs" company="Donald Roy Airey">
-//    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
+//    Copyright © 2025 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data.Server
@@ -7,21 +7,13 @@ namespace GammaFour.Data.Server
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
     using System.Transactions;
-    using DotNext.Threading;
 
     /// <summary>
     /// A foreign index.
     /// </summary>
     public class ForeignIndex : IForeignIndex
     {
-        /// <summary>
-        /// Gets a lock used to synchronize multithreaded access.
-        /// </summary>
-        private readonly AsyncReaderWriterLock asyncReaderWriterLock = new AsyncReaderWriterLock();
-
         /// <summary>
         /// The dictionary containing the index.
         /// </summary>
@@ -58,12 +50,6 @@ namespace GammaFour.Data.Server
         }
 
         /// <inheritdoc/>
-        public bool IsReadLockHeld => this.asyncReaderWriterLock.IsReadLockHeld;
-
-        /// <inheritdoc/>
-        public bool IsWriteLockHeld => this.asyncReaderWriterLock.IsWriteLockHeld;
-
-        /// <inheritdoc/>
         public string Name { get; }
 
         /// <inheritdoc/>
@@ -75,7 +61,8 @@ namespace GammaFour.Data.Server
         /// <param name="row">The referenced record.</param>
         public void Add(IRow row)
         {
-            // For those values that qualify as keys, extract the key from the record and add it to the dictionary making sure we can undo the action.
+            // For those values that qualify as keys, extract the key from the record and add it to the dictionary making sure we can undo the
+            // action.
             if (this.Filter(row))
             {
                 // Don't attempt to add a record with a null key.
@@ -226,13 +213,6 @@ namespace GammaFour.Data.Server
         }
 
         /// <inheritdoc/>
-        public void Release()
-        {
-            // Releases the semaphore.
-            this.asyncReaderWriterLock.Release();
-        }
-
-        /// <inheritdoc/>
         public void Rollback(Enlistment enlistment)
         {
             // Undo every action in the reverse order that it was enlisted.
@@ -364,20 +344,6 @@ namespace GammaFour.Data.Server
                     });
                 }
             }
-        }
-
-        /// <inheritdoc/>
-        public async Task WaitReaderAsync(CancellationToken cancellationToken)
-        {
-            // The semaphore is used to lock the object for the duration of a transaction, or until cancelled.
-            await this.asyncReaderWriterLock.EnterReadLockAsync(cancellationToken);
-        }
-
-        /// <inheritdoc/>
-        public async Task WaitWriterAsync(CancellationToken cancellationToken)
-        {
-            // The semaphore is used to lock the object for the duration of a transaction, or until cancelled.
-            await this.asyncReaderWriterLock.EnterWriteLockAsync(cancellationToken);
         }
 
         /// <summary>

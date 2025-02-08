@@ -1,5 +1,5 @@
 // <copyright file="IRow.cs" company="Donald Roy Airey">
-//    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
+//    Copyright © 2025 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data.Server
@@ -9,7 +9,7 @@ namespace GammaFour.Data.Server
     /// <summary>
     /// Used by a template selector to connect a view model to the template used to display it.
     /// </summary>
-    public interface IRow : IEnlistmentNotification, ILockable
+    public interface IRow : IEnlistmentNotification
     {
         /// <summary>
         /// Gets the element from the given column index.

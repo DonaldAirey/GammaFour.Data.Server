@@ -1,5 +1,5 @@
 ﻿// <copyright file="UniqueIndex{T}.cs" company="Donald Roy Airey">
-//    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
+//    Copyright © 2025 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data.Server
@@ -11,8 +11,9 @@ namespace GammaFour.Data.Server
     /// </summary>
     /// <typeparam name="T">The type of IRow managed by the index.</typeparam>
     /// <param name="name">The name of the index.</param>
-    public class UniqueIndex<T>(string name)
-        : UniqueIndex(name)
+    /// <param name="table">The table.</param>
+    public class UniqueIndex<T>(string name, ITable table)
+        : UniqueIndex(name, table)
         where T : class, IRow
     {
         /// <summary>

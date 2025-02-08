@@ -1,28 +1,21 @@
 ﻿// <copyright file="UniqueIndex.cs" company="Donald Roy Airey">
-//    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
+//    Copyright © 2025 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data.Server
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
     using System.Transactions;
-    using DotNext.Threading;
 
     /// <summary>
     /// A unique index.
     /// </summary>
     /// <param name="name">The name of the index.</param>
-    public class UniqueIndex(string name)
+    /// <param name="table">The table.</param>
+    public class UniqueIndex(string name, ITable table)
         : IUniqueIndex
     {
-        /// <summary>
-        /// Gets a lock used to synchronize multithreaded access.
-        /// </summary>
-        private readonly AsyncReaderWriterLock asyncReaderWriterLock = new AsyncReaderWriterLock();
-
         /// <summary>
         /// The dictionary mapping the keys to the rows.
         /// </summary>
@@ -44,21 +37,15 @@ namespace GammaFour.Data.Server
         private Func<IRow, object> keyFunction = t => throw new NotImplementedException();
 
         /// <summary>
-        /// Gets or sets the handler for when the index is changed.
+        /// Gets or sets the change handler.
         /// </summary>
         public EventHandler<RecordChangeEventArgs<IRow>>? IndexChangedHandler { get; set; }
-
-        /// <inheritdoc/>
-        public bool IsReadLockHeld => this.asyncReaderWriterLock.IsReadLockHeld;
-
-        /// <inheritdoc/>
-        public bool IsWriteLockHeld => this.asyncReaderWriterLock.IsWriteLockHeld;
 
         /// <inheritdoc/>
         public string Name { get; } = name;
 
         /// <inheritdoc/>
-        public ITable? Table { get; set; } = null;
+        public ITable Table { get; set; } = table;
 
         /// <inheritdoc/>
         public void Add(IRow row)
@@ -160,13 +147,6 @@ namespace GammaFour.Data.Server
         }
 
         /// <inheritdoc/>
-        public void Release()
-        {
-            // Releases the lock.
-            this.asyncReaderWriterLock.Release();
-        }
-
-        /// <inheritdoc/>
         public void Remove(IRow row)
         {
             // Make sure the key was properly removed before we push an undo operation on the stack.  Removing an item that isn't part of the index
@@ -223,20 +203,6 @@ namespace GammaFour.Data.Server
                 // Notify when the index has changed.
                 this.OnIndexChanging(DataAction.Update, previousRow, row);
             }
-        }
-
-        /// <inheritdoc/>
-        public async Task WaitReaderAsync(CancellationToken cancellationToken)
-        {
-            // The semaphore is used to lock the object for the duration of a transaction, or until cancelled.
-            await this.asyncReaderWriterLock.EnterReadLockAsync(cancellationToken);
-        }
-
-        /// <inheritdoc/>
-        public async Task WaitWriterAsync(CancellationToken cancellationToken)
-        {
-            // The semaphore is used to lock the object for the duration of a transaction, or until cancelled.
-            await this.asyncReaderWriterLock.EnterWriteLockAsync(cancellationToken);
         }
 
         /// <summary>

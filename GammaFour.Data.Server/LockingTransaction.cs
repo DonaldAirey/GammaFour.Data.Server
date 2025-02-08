@@ -1,26 +1,21 @@
 ﻿// <copyright file="LockingTransaction.cs" company="Donald Roy Airey">
-//    Copyright © 2022 - Donald Roy Airey.  All Rights Reserved.
+//    Copyright © 2025 - Donald Roy Airey.  All Rights Reserved.
 // </copyright>
 // <author>Donald Roy Airey</author>
 namespace GammaFour.Data.Server
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Transactions;
+    using DotNext.Threading;
 
     /// <summary>
     /// An extension to the <see cref="TransactionScope"/> that also handles resource locking.
     /// </summary>
     public class LockingTransaction : IDisposable
     {
-        /// <summary>
-        /// Implicit cancellation token source for when non is supplied by the caller.
-        /// </summary>
-        private readonly CancellationTokenSource? cancellationTokenSource;
-
         /// <summary>
         /// The transaction.
         /// </summary>
@@ -34,12 +29,7 @@ namespace GammaFour.Data.Server
         /// <summary>
         /// Collection of reader locks for the resources used by the transactional code block.
         /// </summary>
-        private readonly HashSet<ILockable> readerLocks = new HashSet<ILockable>();
-
-        /// <summary>
-        /// Collection of writer locks for the resources used by the transactional code block.
-        /// </summary>
-        private readonly HashSet<ILockable> writerLocks = new HashSet<ILockable>();
+        private readonly List<AsyncLock.Holder> holders = new List<AsyncLock.Holder>();
 
         /// <summary>
         /// A cancellation token provided by the caller.
@@ -50,42 +40,18 @@ namespace GammaFour.Data.Server
         /// Initializes a new instance of the <see cref="LockingTransaction"/> class.
         /// </summary>
         /// <param name="transactionTimeout">The TimeSpan after which the transaction scope times out and aborts the transaction.</param>
-        public LockingTransaction(TimeSpan transactionTimeout = default)
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public LockingTransaction(TimeSpan transactionTimeout = default, CancellationToken cancellationToken = default)
         {
-            // Create an implicit cancellation token based on a timeout.
-            this.cancellationTokenSource = new CancellationTokenSource(transactionTimeout);
-            this.cancellationToken = this.cancellationTokenSource.Token;
+            // Provide a default cancellation token if not provided by the caller.
+            this.cancellationToken = cancellationToken == default ? CancellationToken.None : cancellationToken;
 
             // Initialize the object.
-            this.transactionScope = new TransactionScope(TransactionScopeOption.RequiresNew, transactionTimeout, TransactionScopeAsyncFlowOption.Enabled);
-
-            // We must check for nulls to satisfy the compiler that Transaction.Current has a non-null value.
-            if (Transaction.Current == default)
-            {
-                throw new Exception();
-            }
-
-            this.transaction = Transaction.Current;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LockingTransaction"/> class.
-        /// </summary>
-        /// <param name="cancellationToken">Used to cancel the entire transaction.</param>
-        public LockingTransaction(CancellationToken cancellationToken)
-        {
-            // Initialize the object.
-            this.cancellationToken = cancellationToken;
-
-            // Initialize the object.
-            this.transactionScope = new TransactionScope(TransactionScopeOption.RequiresNew, TransactionScopeAsyncFlowOption.Enabled);
-
-            // We must check for nulls to satisfy the compiler that Transaction.Current has a non-null value.
-            if (Transaction.Current == default)
-            {
-                throw new Exception();
-            }
-
+            this.transactionScope = new TransactionScope(
+                TransactionScopeOption.RequiresNew,
+                transactionTimeout == default ? TransactionManager.DefaultTimeout : transactionTimeout,
+                TransactionScopeAsyncFlowOption.Enabled);
+            ArgumentNullException.ThrowIfNull(Transaction.Current);
             this.transaction = Transaction.Current;
         }
 
@@ -101,7 +67,7 @@ namespace GammaFour.Data.Server
         /// <inheritdoc/>
         public void Dispose()
         {
-            // Dispose of the managed resources and suppress finalization.
+            // Dispose of the object.
             this.Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -109,51 +75,35 @@ namespace GammaFour.Data.Server
         /// <summary>
         /// Asynchronously waits to read a protected resource.
         /// </summary>
-        /// <param name="lockable">An object that can be locked for the duration of a transaction.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task WaitReaderAsync(ILockable lockable)
+        /// <param name="enlistmentNotification">An object that can be enlisted into a transaction.</param>
+        public void Add(IEnlistmentNotification enlistmentNotification)
         {
-            // The locking primitives don't allow for recursion.  To get around this limitation, we keep track of the locks acquired at the level of
-            // a transaction and allow a lock to be acquired only once (no matter how many times this method is called), so then it can be released
-            // only once.
-            if (!this.readerLocks.Contains(lockable))
-            {
-                // Enter the lock.
-                await lockable.WaitReaderAsync(this.cancellationToken);
+            // Add the enlistable to the transaction.
+            this.transaction.EnlistVolatile(enlistmentNotification, EnlistmentOptions.None);
+        }
 
-                // Keep track of all the locks entered as we'll need to release these at the end of the transaction.
-                this.readerLocks.Add(lockable);
-
-                // If the lockable object can participate in a two-phase commit, then enlist it.
-                if (lockable is IEnlistmentNotification enlistmentNotification)
-                {
-                    this.transaction.EnlistVolatile(enlistmentNotification, EnlistmentOptions.None);
-                }
-            }
+        /// <summary>
+        /// Asynchronously waits to read a protected resource.
+        /// </summary>
+        /// <param name="enlistmentNotification">An object that can be enlisted into a transaction.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task WaitReaderAsync(IEnlistmentNotification enlistmentNotification)
+        {
+            // Lock the object for reading and add it to the transaction.
+            this.holders.Add(await enlistmentNotification.AcquireReadLockAsync(this.cancellationToken));
+            this.transaction.EnlistVolatile(enlistmentNotification, EnlistmentOptions.None);
         }
 
         /// <summary>
         /// Asynchronously waits to write a protected resource.
         /// </summary>
-        /// <param name="lockable">An object that can be locked for the duration of a transaction.</param>
+        /// <param name="enlistmentNotification">An object that can be enlisted into a transaction.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task WaitWriterAsync(ILockable lockable)
+        public async Task WaitWriterAsync(IEnlistmentNotification enlistmentNotification)
         {
-            // This transaction doesn't support recursive locks. You can lock an object once, it will be released once.
-            if (!this.writerLocks.Contains(lockable))
-            {
-                // Enter the lock.
-                await lockable.WaitWriterAsync(this.cancellationToken);
-
-                // Keep track of all the locks entered as we'll need to release these at the end of the transaction.
-                this.writerLocks.Add(lockable);
-
-                // If the lockable object can participate in a two-phase commit, then enlist it.
-                if (lockable is IEnlistmentNotification enlistmentNotification)
-                {
-                    this.transaction.EnlistVolatile(enlistmentNotification, EnlistmentOptions.None);
-                }
-            }
+            // Lock the object for writing and add it to the transaction.
+            this.holders.Add(await enlistmentNotification.AcquireReadLockAsync(this.cancellationToken));
+            this.transaction.EnlistVolatile(enlistmentNotification, EnlistmentOptions.None);
         }
 
         /// <summary>
@@ -162,13 +112,14 @@ namespace GammaFour.Data.Server
         /// <param name="disposing">An indication whether the managed resources are to be disposed.</param>
         protected virtual void Dispose(bool disposing)
         {
-            // This finalizes the transaction.
-            this.transactionScope.Dispose();
-            this.cancellationTokenSource?.Dispose();
-
-            // Release all the locks as the last action of this transaction.
-            this.readerLocks.ToList().ForEach(l => l.Release());
-            this.writerLocks.ToList().ForEach(l => l.Release());
+            // Dispose of the managed objects.
+            if (disposing)
+            {
+                foreach (var holder in this.holders)
+                {
+                    holder.Dispose();
+                }
+            }
         }
     }
 }
