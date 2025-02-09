@@ -102,7 +102,7 @@ namespace GammaFour.Data.Server
         public async Task WaitWriterAsync(IEnlistmentNotification enlistmentNotification)
         {
             // Lock the object for writing and add it to the transaction.
-            this.holders.Add(await enlistmentNotification.AcquireReadLockAsync(this.cancellationToken));
+            this.holders.Add(await enlistmentNotification.AcquireWriteLockAsync(this.cancellationToken));
             this.transaction.EnlistVolatile(enlistmentNotification, EnlistmentOptions.None);
         }
 
@@ -115,6 +115,7 @@ namespace GammaFour.Data.Server
             // Dispose of the managed objects.
             if (disposing)
             {
+                this.transactionScope.Dispose();
                 foreach (var holder in this.holders)
                 {
                     holder.Dispose();
